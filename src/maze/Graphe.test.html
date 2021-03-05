@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Graphe test</title>
+</head>
+<body>
+    <script type="module">
+        import {Graphe} from './Graphe.js';
+        import {tests, assertEquals} from "../tests/TestLib.js";
+        tests({
+            'voisins() vide': function() {
+                const graphe = new Graphe()
+                assertEquals([], graphe.voisins(6))
+            },
+            'voisins()': function() {
+                const graphe = new Graphe()
+                graphe.ajouter_arete(4, 5)
+                assertEquals([5], graphe.voisins(4))
+                graphe.ajouter_arete(4, 8)
+                assertEquals([5, 8], graphe.voisins(4))
+            },
+            'parcours_largeur() vide': function () {
+                const graphe = new Graphe()
+                assertEquals([], graphe.parcours_largeur('A'))
+            },
+            'parcours_largeur()': function () {
+                /*      A
+                      /   \
+                     B     C
+                    / \   /
+                   D   E F
+                      /
+                     G          */
+                const graphe = new Graphe()
+                graphe.ajouter_arete('A', 'B')
+                graphe.ajouter_arete('A', 'C')
+                graphe.ajouter_arete('B', 'D')
+                graphe.ajouter_arete('B', 'E')
+                graphe.ajouter_arete('E', 'G')
+                graphe.ajouter_arete('C', 'F')
+                assertEquals(['A', 'B', 'C', 'D', 'E', 'F', 'G'], graphe.parcours_largeur('A'))
+            }
+        })
+    </script>
+</body>
+</html>
