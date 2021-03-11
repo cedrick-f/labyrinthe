@@ -16,9 +16,9 @@
             'voisins()': function() {
                 const graphe = new Graphe()
                 graphe.ajouter_arete(4, 5)
-                assertEquals([5], graphe.voisins(4))
+                assertEquals(new Set([5]), graphe.voisins(4))
                 graphe.ajouter_arete(4, 8)
-                assertEquals([5, 8], graphe.voisins(4))
+                assertEquals(new Set([5, 8]), graphe.voisins(4))
             },
             'parcours_largeur() vide': function () {
                 const graphe = new Graphe()
