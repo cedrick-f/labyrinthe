@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LabyrintheView test</title>
+</head>
+<body>
+  <canvas width="500" height="500"></canvas>
+<script type="module">
+  import {LabyrintheVue} from "./LabyrintheVue.js";
+  import {Labyrinthe} from "../maze/Labyrinthe.js";
+
+  const labyrinthe = new Labyrinthe(16, 16, 'fusion')
+  new LabyrintheVue(document.querySelector('canvas')).draw(labyrinthe)
+</script>
+</body>
+</html>

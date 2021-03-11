@@ -17,4 +17,15 @@ export class Labyrinthe {
     generate(callback) {
         
     }
+	
+	/**
+     * @param {number} ax 
+     * @param {number} ay 
+	  * @param {number} bx 
+	  * @param {number} by 
+	  * @return {boolean}
+     */
+	murEntre(ax, ay, bx, by) {
+		return true
+	}
 }
