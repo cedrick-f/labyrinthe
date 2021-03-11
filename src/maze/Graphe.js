@@ -9,19 +9,17 @@ export class Graphe {
 
     /**
      * @param {T} sommet
-     * @return {T[]}
+     * @return {Set<T>}
      */
     voisins(sommet) {
-        return this.A[sommet] || []
+        return this.A[sommet] || new Set()
     }
 
     /**
-     * @param {T} a
-     * @param {T} b
+     * @param {T} x
      */
-	
 	ajouter_sommet(x) {
-        if (!Object.keys(this.A).includes(x)) {
+        if (!(x in this.A)) {
             this.A[x] = new Set()
 		}
 	}
@@ -29,7 +27,6 @@ export class Graphe {
     ajouter_arete(a, b) {
         this.ajouter_sommet(a)
         this.ajouter_sommet(b)
-		debugger
         this.A[a].add(b)
 		this.A[b].add(a)
     }
@@ -50,7 +47,7 @@ export class Graphe {
 					dist.push(v)
 				}
 			}
-			if (cour.length == 0) {
+			if (cour.length === 0) {
 				cour = suiv
 				suiv = []
 			}

@@ -11,7 +11,7 @@
         tests({
             'voisins() vide': function() {
                 const graphe = new Graphe()
-                assertEquals([], graphe.voisins(6))
+                assertEquals(new Set(), graphe.voisins(6))
             },
             'voisins()': function() {
                 const graphe = new Graphe()
@@ -19,6 +19,7 @@
                 assertEquals(new Set([5]), graphe.voisins(4))
                 graphe.ajouter_arete(4, 8)
                 assertEquals(new Set([5, 8]), graphe.voisins(4))
+                assertEquals(new Set([4]), graphe.voisins(8))
             },
             'parcours_largeur() vide': function () {
                 const graphe = new Graphe()
