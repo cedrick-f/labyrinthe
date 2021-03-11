@@ -43,6 +43,19 @@ export const assertEquals = function (expected, actual) {
   if (Array.isArray(expected) && Array.isArray(actual)) {
     difference = expected.length !== actual.length || expected.some((val, i) => val !== actual[i])
   }
+  if (expected instanceof Set && actual instanceof Set) {
+	if (expected.size !== actual.size) {
+	  difference = true;
+	} else {
+	  difference = false;
+	  for (const e of expected) {
+		if (!actual.has(e)) {
+		  difference = true;
+		  break;
+		}
+	  }
+	}
+  }
   if (difference) {
     throw new AssertionFailed('Expected:', expected, '\n Actual:', actual)
   }
