@@ -36,18 +36,21 @@ export class Graphe {
      * @return {T[]}
      */
     parcours_largeur(from) {
+		if (!(from in this.A)) {
+			return []
+		}
 		let dist = [from]
 		let cour = [from]
 		let suiv = []
-		while (cour.length > 0) {
-			let s = cour.pop()
+		while (cour.length) {
+			let s = cour.shift()
 			for (let v of this.voisins(s)) {
 				if (!dist.includes(v)){
 					suiv.push(v)
 					dist.push(v)
 				}
 			}
-			if (cour.length === 0) {
+			if (!cour.length) {
 				cour = suiv
 				suiv = []
 			}
