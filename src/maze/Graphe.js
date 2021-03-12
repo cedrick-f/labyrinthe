@@ -39,15 +39,34 @@ export class Graphe {
 		if (!(from in this.A)) {
 			return []
 		}
-		let dist = [from]
+		let r = []
+        let s = []
+        s.push(from)
+        while (s.length) {
+            let p = s.shift()
+            if (!(r.includes(p))) {
+                r.push(p)
+                for (let e of this.voisins(p)) {
+                    s.push(e)
+				}
+			}
+		}
+        return r
+	}
+	
+	chemins(from) {
+		if (!(from in this.A)) {
+			return []
+		}
+		let r = {from : undefined}
 		let cour = [from]
 		let suiv = []
-		while (cour.length) {
+        while (cour.length) {
 			let s = cour.shift()
 			for (let v of this.voisins(s)) {
-				if (!dist.includes(v)){
-					suiv.push(v)
-					dist.push(v)
+				if (!r.includes(v)){
+                    suiv.push(v)
+                    r[v] = s
 				}
 			}
 			if (!cour.length) {
@@ -55,6 +74,26 @@ export class Graphe {
 				suiv = []
 			}
 		}
-		return dist
-    }
+		return r
+	}
+	
+	parcours_profondeur(from) {
+		if (!(from in this.A)) {
+			return []
+		}
+		let r = []
+        let s = []
+        s.push(from)
+        while (s.length) {
+            let p = s.pop()
+            if (!(r.includes(p))) {
+                r.push(p)
+                for (let e of this.voisins(p)) {
+                    s.push(e)
+				}
+			}
+		}
+        return r
+	}
+		
 }
