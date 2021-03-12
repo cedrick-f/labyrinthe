@@ -41,7 +41,24 @@
                 graphe.ajouter_arete('E', 'G')
                 graphe.ajouter_arete('C', 'F')
                 assertEquals(['A', 'B', 'C', 'D', 'E', 'F', 'G'], graphe.parcours_largeur('A'))
-            }
+            },
+			'parcours_profondeur() vide': function () {
+				const graphe = new Graphe()
+                assertEquals([], graphe.parcours_profondeur(5))
+			},
+			'parcours_profondeur()': function () {
+				const graphe = new Graphe()
+                graphe.ajouter_arete(1, 2)
+				graphe.ajouter_arete(1, 5)
+				graphe.ajouter_arete(1, 9)
+				graphe.ajouter_arete(2, 3)
+				graphe.ajouter_arete(3, 4)
+				graphe.ajouter_arete(5, 6)
+				graphe.ajouter_arete(5, 8)
+				graphe.ajouter_arete(6, 7)
+				graphe.ajouter_arete(9, 10)
+				assertEquals([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], graphe.parcours_profondeur(5))
+			}
         })
     </script>
 </body>
