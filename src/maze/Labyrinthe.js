@@ -1,6 +1,6 @@
 import {generatorFromName} from "./LabyrintheGenerator.js";
 import {Graphe} from "./Graphe.js"
-import {Coords, Mur} from "../util/Coords";
+import {Coords, Mur} from "../util/Coords.js";
 
 export class Labyrinthe {
     /**
