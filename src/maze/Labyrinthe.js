@@ -1,5 +1,6 @@
 import {generatorFromName} from "./LabyrintheGenerator.js";
 import {Graphe} from "./Graphe.js"
+import {Coords} from "../util/Coords";
 
 export class Labyrinthe {
     /**
@@ -19,35 +20,13 @@ export class Labyrinthe {
     generate(callback) {
         
     }
-	
-	/** tester les résultats et changer les + et -
-	*/
-	mursCellule(s){
-		let ws = s[1]
-		let hs = s[0]
-		let l = []
-		if (ws > 0) {
-			l.push([[hs, ws],[hs, ws - 1]])
-			
-		}
-		if (ws < this.width-1) {
-			l.push([[hs, ws],[hs, ws + 1]])
-			
-		}
-		if (hs > 0) {
-			l.push([[hs, ws],[hs - 1, ws]])
-			
-		}
-		if (hs < this.height-1) {
-			l.push([[hs, ws],[hs + 1, ws]])
-			
-		}
-		return l
-	}
-	
-	voisinsCellule(s) {
-		let ws = s[1]
-		let hs = s[0]
+
+	/**
+	 * @param {number} x
+	 * @param {number} y
+	 * @return {Coords[]}
+	 */
+	voisinsCellule(x, y) {
 		let l = []
 		if (ws > 0) {
 			l.push([[hs, ws - 1]])
@@ -63,32 +42,29 @@ export class Labyrinthe {
 		}
 		return l
 	}
-	
-	ouvrir_passage(x, y) {
-		let nx = this.identifiantCellule(x[0], x[1])
-		let ny = this.identifiantCellule(y[0], y[1])
-		if (this.mursCellule(nx).includes(ny)) {
-			this.graphe.ajouter_arete(x, y)
+
+	/**
+	 * @param {Coords} a
+	 * @param {Coords} b
+	 */
+	ouvrir_passage(a, b) {
+		if (this.voisinsCellule(a.x, a.y).some(cellule => cellule.equals(b))) {
+			this.graphe.ajouter_arete(a.identifiant(this), b.identifiant(this))
+		} else {
+			throw new Error('Impossible d\'ouvrir un passage entre des cellules non voisines.')
 		}
 	}
 	
 	/**
-	 * //renvoie true s'il y a pas d'arrete au sens graphe entre deux cellules
-     * @param {number} ax 
+	 * Retourne true s'il y a pas d'arête au sens graphe entre deux cellules
+     *
+	 * @param {number} ax
      * @param {number} ay 
-	  * @param {number} bx 
-	  * @param {number} by 
-	  * @return {boolean}
+	 * @param {number} bx
+	 * @param {number} by
+	 * @return {boolean}
      */
 	murEntre(ax, ay, bx, by) {
-		Graphe.voisins()
-		return true
+		return !this.graphe.voisins(Coords.identifiant(ax, ay, this)).has(Coords.identifiant(bx, by, this))
 	}
-	
-	identifiantCellule(l, c) {
-		return l * this.width + c
-	}
-	
 }
-
-

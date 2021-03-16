@@ -7,6 +7,32 @@ export class Coords {
         this.x = x;
         this.y = y;
     }
+
+    /**
+     * @param {Coords} coords
+     * @return {boolean}
+     */
+    equals(coords) {
+        return this.x === coords.x && this.y === coords.y
+    }
+
+    /**
+     * @param {Labyrinthe} labyrinthe
+     * @return {number}
+     */
+    identifiant(labyrinthe) {
+        return Coords.identifiant(this.x, this.y, labyrinthe)
+    }
+
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {Labyrinthe} labyrinthe
+     * @return {number}
+     */
+    static identifiant(x, y, labyrinthe) {
+        return x + y * labyrinthe.width
+    }
 }
 
 export class Mur {

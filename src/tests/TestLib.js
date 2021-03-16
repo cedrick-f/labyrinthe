@@ -31,6 +31,28 @@ export const tests = function (tests) {
   }
 };
 
+const deepEquals = function (expected, actual) {
+    if (Array.isArray(expected) && Array.isArray(actual)) {
+        return expected.length === actual.length && expected.every((val, i) => val === actual[i])
+    }
+    if (expected instanceof Set && actual instanceof Set) {
+        if (expected.size !== actual.size) {
+            return false
+        }
+        for (const e of expected) {
+            if (!actual.has(e)) {
+                return false
+            }
+        }
+        return true
+    }
+    if (typeof expected === 'object' && typeof actual === 'object') {
+        return Object.keys(expected).length === Object.keys(actual).length
+            && Object.keys(expected).every(p => deepEquals(expected[p], actual[p]));
+    }
+    return expected === actual
+}
+
 /**
  * Vérifie que *expected* et *actual* sont égaux et de même type.
  *
@@ -39,27 +61,33 @@ export const tests = function (tests) {
  * @template T
  */
 export const assertEquals = function (expected, actual) {
-  let difference = expected !== actual;
-  if (Array.isArray(expected) && Array.isArray(actual)) {
-    difference = expected.length !== actual.length || expected.some((val, i) => val !== actual[i])
-  }
-  if (expected instanceof Set && actual instanceof Set) {
-	if (expected.size !== actual.size) {
-	  difference = true;
-	} else {
-	  difference = false;
-	  for (const e of expected) {
-		if (!actual.has(e)) {
-		  difference = true;
-		  break;
-		}
-	  }
-	}
-  }
-  if (difference) {
-    throw new AssertionFailed('Expected:', expected, '\n Actual:', actual)
-  }
+    if (!deepEquals(expected, actual)) {
+        throw new AssertionFailed('Expected:', expected, '\n Actual:', actual)
+    }
 };
+
+export const assertContains = function (expected, actual) {
+    expected = Array.isArray(expected) ? expected : [expected]
+    if (typeof actual[Symbol.iterator] !== 'function') {
+        throw new AssertionFailed('Expected an iterable, got:', actual)
+    }
+    if (expected.length !== (typeof actual.length === 'number' ? actual.length : actual.size)) {
+        throw new AssertionFailed('Expected:', expected, '\n Actual:', actual)
+    }
+    for (const expectedValue of expected) {
+        let found = false
+        for (const e of actual) {
+            if (deepEquals(expectedValue, e)) {
+                found = true
+                break
+            }
+        }
+
+        if (!found) {
+            throw new AssertionFailed('Expected the iterable to contains:', expected, '\n Actual:', actual)
+        }
+    }
+}
 
 class AssertionFailed extends Error {
 

@@ -1,0 +1,22 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+}
+section {
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+h1 {
+    text-align: center;
+}
+.grid {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+}
+input {
+    vertical-align: middle;
+}

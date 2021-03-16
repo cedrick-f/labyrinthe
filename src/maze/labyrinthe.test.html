@@ -5,17 +5,20 @@
     <title>Labyrinthe</title>
 </head>
 <body>
-  <div></div>
-  <canvas></canvas>
+  <canvas height="500" width="500"></canvas>
   <script src="Labyrinthe.js" type="module"></script>
   <script type="module">
   import {Labyrinthe} from './Labyrinthe.js'
-  let labyrinthe = new Labyrinthe(5, 4)
-  console.log(labyrinthe.voisinsCellule([1, 1]))
   import {LabyrintheVue} from '../vue/LabyrintheVue.js'
+  import {Coords} from '../util/Coords'
+
+  let labyrinthe = new Labyrinthe(10, 10, 'prim')
+  let path = [new Coords(2, 5), new Coords(2, 6), new Coords(3, 6), new Coords(4, 6)]
+  for (let i = 1; i < path.length; i++) {
+      labyrinthe.ouvrir_passage(path[i - 1], path[i])
+  }
   let labyrintheVue = new LabyrintheVue(document.querySelector('canvas'))
-  console.log(labyrintheVue.draw(labyrinthe))
-  labyrinthe.ouvrir_passage([1, 2],[1, 3])
+  labyrintheVue.draw(labyrinthe)
   </script>
 </body>
 </html>
