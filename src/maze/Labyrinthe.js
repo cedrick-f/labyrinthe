@@ -1,6 +1,6 @@
 import {generatorFromName} from "./LabyrintheGenerator.js";
 import {Graphe} from "./Graphe.js"
-import {Coords} from "../util/Coords";
+import {Coords, Mur} from "../util/Coords";
 
 export class Labyrinthe {
     /**
@@ -42,6 +42,15 @@ export class Labyrinthe {
 		}
 		return l
 	}
+
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {Mur[]}
+     */
+    mursCellule(x, y) {
+        return this.voisinsCellule(x, y).map(voisin => new Mur(new Coords(x, y), voisin));
+    }
 
 	/**
 	 * @param {Coords} a
