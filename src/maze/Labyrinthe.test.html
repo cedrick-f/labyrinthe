@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Labyrinthe test</title>
+</head>
+<body>
+    <script type="module">
+        import {Labyrinthe} from './Labyrinthe.js';
+        import {assertContains, assertEquals, tests} from "../tests/TestLib";
+        import {Coords} from "../util/Coords";
+
+        tests({
+            'voisinsCellule() 4 murs': function () {
+                const labyrinthe = new Labyrinthe(10, 15, 'prim')
+                assertContains([new Coords(1, 8), new Coords(3, 8), new Coords(2, 7), new Coords(2, 9)], labyrinthe.voisinsCellule(2, 8))
+            },
+            'voisinsCellule() angle haut-droite': function () {
+                const labyrinthe = new Labyrinthe(10, 15, 'prim')
+                assertContains([new Coords(8, 0), new Coords(9, 1)], labyrinthe.voisinsCellule(9, 0))
+            },
+            'voisinsCellule() angle bas-gauche': function () {
+                const labyrinthe = new Labyrinthe(10, 15, 'prim')
+                assertContains([new Coords(0, 13), new Coords(1, 14)], labyrinthe.voisinsCellule(0, 14))
+            },
+            'ouvrir_passage()': function () {
+                const labyrinthe = new Labyrinthe(9, 9, 'prim')
+                assertEquals(true, labyrinthe.murEntre(4, 5, 5, 5))
+                labyrinthe.ouvrir_passage(new Coords(4, 5), new Coords(5, 5))
+                assertEquals(false, labyrinthe.murEntre(4, 5, 5, 5));
+            }
+        })
+  </script>
+</body>
+</html>
