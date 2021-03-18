@@ -86,7 +86,7 @@ export class Graphe {
         for (let onsenfoutdecettevariable in chemins) {
             r.push(y)
             y = paths[y]
-            if y === x {
+            if (y === x) {
                 r.push(y)
                 r.reverse()
                 return r
