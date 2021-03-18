@@ -77,6 +77,23 @@ export class Graphe {
 		return r
 	}
 	
+	chemin(x, y) {
+        let chemins = this.chemins(x)
+        if (!(y in chemins)) {
+            return None
+		}
+        let r = []
+        for (let onsenfoutdecettevariable in chemins) {
+            r.push(y)
+            y = paths[y]
+            if y === x {
+                r.push(y)
+                r.reverse()
+                return r
+			}
+		}
+	}
+	
 	parcours_profondeur(from) {
 		if (!(from in this.A)) {
 			return []
