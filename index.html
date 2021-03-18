@@ -17,7 +17,20 @@
                         <input type="range" min="2" max="32" id="width" is="range-value">
                         <label for="width">Largeur</label>
                     </div>
-                    <!-- ... -->
+                    <div class="form-group">
+                        <input type="range" min="2" max="32" id="height" is="range-value">
+                        <label for="height">Hauteur</label>
+                    </div>
+                    <h4>Algorithme de construction</h4>
+					<div class="form-group"><input type="radio" name="algorithm" id="random" /><label for="random">Random</label></div>
+                    <div class="form-group"><input type="radio" name="algorithm" id="fusion" /><label for="fusion">Fusion</label></div>
+                    <div class="form-group"><input type="radio" name="algorithm" id="prim" /><label for="prim">Prim</label></div>
+                    <div class="form-group"><input type="radio" name="algorithm" id="aldous-broder" /><label for="aldous-broder">Aldous-Broder</label></div>
+                    <button id="build">Construire</button>
+                </fieldset>
+				<fieldset>
+                    <legend>Résolution</legend>
+                    <button id="solve">Lancer</button>
                 </fieldset>
             </div>
         </div>

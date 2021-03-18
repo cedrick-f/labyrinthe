@@ -15,13 +15,6 @@ export class Labyrinthe {
 	}
 
 	/**
-	 * @param {function (Mur): void} [callback]
-	 */
-	generate(callback) {
-	    
-	}
-
-	/**
 	 * @param {number} x
 	 * @param {number} y
 	 * @return {Coords[]}
