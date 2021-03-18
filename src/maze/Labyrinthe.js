@@ -28,17 +28,17 @@ export class Labyrinthe {
 	 */
 	voisinsCellule(x, y) {
 		let l = []
-		if (ws > 0) {
-			l.push([[hs, ws - 1]])
+		if (x > 0) {
+			l.push(new Coords(x - 1, y))
 		}
-		if (ws < this.width) {
-			l.push([[hs, ws + 1]])
+		if (x < this.width-1) {
+			l.push(new Coords(x + 1, y))
 		}
-		if (hs > 0) {
-			l.push([[hs - 1, ws]])
+		if (y > 0) {
+			l.push(new Coords(x, y - 1))
 		}
-		if (hs < this.height) {
-			l.push([[hs + 1, ws]])
+		if (y < this.height-1) {
+			l.push(new Coords(x, y + 1))
 		}
 		return l
 	}
