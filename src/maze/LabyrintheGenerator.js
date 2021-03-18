@@ -16,6 +16,21 @@ export function generatorFromName(name, labyrinthe) {
     }
 }
 
+class Fusion {
+	constructor(x, y) {
+		let l = []
+		this x = x
+		this y = y
+	}
+		
+	construire_fusion(x, y){
+		for (let x = 0; x < labirynthe.width; x++) {
+			
+		}
+	}
+	
+}
+
 
 class RandomGenerator {
 
