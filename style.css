@@ -22,11 +22,15 @@ h4 {
     display: grid;
     grid-template-columns: 3fr 1fr;
 }
+.grid > div:first-child {
+    padding: .75rem;
+}
 input {
     vertical-align: middle;
 }
 button {
-	padding: .5rem 1rem;
+    margin-top: .5rem;
+	padding: .6rem 1rem;
 	background-color: #14a7ff;
 	border: none;
 	cursor: pointer;
@@ -34,4 +38,7 @@ button {
 .form-group {
 	margin-top: .25rem;
 	margin-bottom: .25rem;
+}
+.reverse {
+    direction: rtl;
 }
