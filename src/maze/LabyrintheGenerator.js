@@ -10,6 +10,9 @@ export function generatorFromName(name, labyrinthe) {
 	if (name === 'random') {
 		return new RandomGenerator(labyrinthe)
 	}
+	if (name === 'aldous-broder') {
+		return new AldousGenerator(labyrinthe)
+	}
     return {
         next: () => new Mur(new Coords(0, 0), new Coords(0, 1)),
         hasNext: () => false
@@ -61,6 +64,30 @@ class RandomGenerator {
 		return this.n > 0
 	}
 }
+
+class AldousGenerator {
+	constructor(labyrinthe) {
+		this.labyrinthe = labyrinthe
+		this.current = new Coords(randomInt(labyrinthe.width), randomInt(labyrinthe.height))
+		this.visited = new Set()
+		this.rien = null
+		this.n = labyrinthe.width * labyrinthe.height
+	}
+	next() {
+		this.visited.add(this.current.identifiant(this.labyrinthe))
+		this.rien = randomChoice(this.labyrinthe.voisinsCellule(this.current.x, this.current.y))
+		if (!(this.visited.has(this.rien.identifiant(this.labyrinthe)))) {
+			this.labyrinthe.ouvrir_passage(this.current, this.rien)
+		}
+		this.current = this.rien
+		this.rien = null
+	}
+	hasNext() {
+		return this.n > this.visited.size
+	}
+}
+
+
 
 /*const n = labyrinthe.width * labyrinthe.height
 while (n > 0) {
