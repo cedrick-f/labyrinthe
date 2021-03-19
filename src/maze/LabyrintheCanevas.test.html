@@ -12,7 +12,7 @@
   import {LabyrintheVue} from '../vue/LabyrintheVue.js'
   import {Coords} from '../util/Coords'
 
-  let labyrinthe = new Labyrinthe(10, 10, 'prim')
+  let labyrinthe = new Labyrinthe(10, 10)
   let path = [new Coords(2, 5), new Coords(2, 6), new Coords(3, 6), new Coords(4, 6)]
   for (let i = 1; i < path.length; i++) {
       labyrinthe.ouvrir_passage(path[i - 1], path[i])

@@ -4,7 +4,7 @@ import {randomInt, randomChoice} from "../util/Random.js";
 /**
  * @param {('random'|'fusion'|'prim'|'aldous-broder')} name
  * @param {Labyrinthe} labyrinthe
- * @return {{ next: function (): Mur, hasNext: function (): boolean }}
+ * @return {{ next: function (): Mur|boolean|void, hasNext: function (): boolean }}
  */
 export function generatorFromName(name, labyrinthe) {
 	if (name === 'random') {
@@ -16,7 +16,7 @@ export function generatorFromName(name, labyrinthe) {
     }
 }
 
-class Fusion {
+/*class Fusion {
 	constructor(x, y) {
 		let l = []
 		this x = x
@@ -28,9 +28,7 @@ class Fusion {
 			
 		}
 	}
-	
-}
-
+}*/
 
 class RandomGenerator {
 
@@ -60,7 +58,7 @@ class RandomGenerator {
 	 * Retourne true s'il reste au moins une étape de construction.
 	 */
 	hasNext() {
-		return n > 0
+		return this.n > 0
 	}
 }
 
