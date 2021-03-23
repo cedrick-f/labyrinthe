@@ -117,6 +117,7 @@ class AldousGenerator {
 		}
 		this.current = this.rien
 		this.rien = null
+		return {current: this.current, visited: this.visited}
 	}
 	hasNext() {
 		return this.n > this.visited.size
