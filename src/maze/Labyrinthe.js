@@ -42,16 +42,21 @@ export class Labyrinthe {
 	mursCellule(x, y) {
 		return this.voisinsCellule(x, y).map(voisin => new Mur(new Coords(x, y), voisin));
 	}
-	
+
+	/**
+	 * Retourne un tableau avec l'ensemble des murs, qu'ils soient ouverts ou fermés.
+	 *
+	 * @return {Mur[]}
+	 */
 	tousLesMurs() {
 		let l = []
-		for (let y in length(height)) {
-			for (let x in lengh(width)) {
+		for (let y = 0; y < this.height; y++) {
+			for (let x = 0; x < this.width; x++) {
 				if (x < this.width-1) {
-					l.push([Coords(x, y), Coords(x+1, y)])
+					l.push(new Mur(new Coords(x, y), new Coords(x+1, y)))
 				}
 				if (y < this.height-1) {
-					l.push([Coords(x, y), Coords(x, y+1)])
+					l.push(new Mur(new Coords(x, y), new Coords(x, y+1)))
 				}
 			}
 		}

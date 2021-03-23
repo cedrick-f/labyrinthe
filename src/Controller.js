@@ -96,8 +96,10 @@ export class Controller {
    */
   onResize() {
     const canvas = this.vue.canvas
-    canvas.width = canvas.parentElement.clientWidth
-    canvas.height = canvas.parentElement.clientHeight
+    canvas.width = 0
+    canvas.height = 0
+    canvas.width = canvas.parentElement.offsetWidth
+    canvas.height = canvas.parentElement.offsetHeight
     this.vue.draw(this.maze)
   }
 }

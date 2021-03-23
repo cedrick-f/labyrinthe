@@ -1,5 +1,12 @@
 import {Coords, Mur} from "../util/Coords.js";
 
+/**
+ * @typedef VueParameters
+ * @type {object}
+ * @property {Coords|Mur|number} [current] Les coordonnées d'une cellule ou d'un mur à mettre en valeur.
+ * @property {Iterable.<Coords|number>} [visited] Un itérable avec les coordonnées/identifiants des cellules déjà visitées.
+ */
+
 export class LabyrintheVue {
 
     /**
@@ -8,17 +15,17 @@ export class LabyrintheVue {
     constructor(canvas) {
         this.canvas = canvas
         this.ctx = canvas.getContext('2d')
-		/** @type {Mur[]} */
+        /** @type {Mur[]} */
         this.lastWalls = []
     }
 
     /**
      * @param {Labyrinthe} labyrinthe
-	 * @param {{ current: Coords, visited: number[]|Set<number>|Coords[]|Set<Coords> }} properties
+     * @param {VueParameters} properties
      */
     draw(labyrinthe, properties = { current: null, visited: [] }) {
         this.ctx.strokeStyle = 'black'
-		this.ctx.lineWidth = 2
+        this.ctx.lineWidth = 2
         this.ctx.strokeRect(1, 1, this.canvas.width - 2, this.canvas.height - 2)
 
         const [fx, fy] = this.cellSizes(labyrinthe)
@@ -28,34 +35,39 @@ export class LabyrintheVue {
             }
         }
 
-		const current = properties.current
-		if (current) {
-			if (current instanceof Coords) {
-				this.ctx.fillStyle = '#ff5555'
-				const ox = fx * current.x
-				const oy = fy * current.y
-				this.ctx.fillRect(ox + 1, oy + 1, fx - 1, fy - 1)
-			} else if (current instanceof Mur) {
-				this.ctx.strokeStyle = '#ff0000'
-				this.ctx.lineWidth = 3
-				this.drawWall(labyrinthe, current)
-				for (const index in this.lastWalls) {
-					this.ctx.strokeStyle = `yellow`
-					this.drawWall(labyrinthe, this.lastWalls[index])
-				}
-				this.lastWalls.push(current)
-				if (this.lastWalls.length > 3) {
-					this.lastWalls.shift()
-				}
-			}
-		}
+        const visited = properties.visited
+        if (visited && (visited.length || visited.size)) {
+            for (const cell of this.unvisitedCellsFromVisited(labyrinthe, properties.visited)) {
+                this.highlightCell(cell, fx, fy, '#e4e4e4')
+            }
+        }
 
-		for (const cell of this.unvisitedCellFromVisited(labyrinthe, properties.visited)) {
-			this.hightlightCell(cell, fx, fy, '#e4e4e4')
-		}
+        const current = properties.current
+        if (current) {
+            if (current instanceof Coords) {
+                this.ctx.fillStyle = '#ff5555'
+                const ox = fx * current.x
+                const oy = fy * current.y
+                this.ctx.fillRect(ox + 1, oy + 1, fx - 1, fy - 1)
+            } else if (current instanceof Mur) {
+                this.ctx.strokeStyle = '#ff0000'
+                this.ctx.lineWidth = 3
+                this.drawWall(labyrinthe, current)
+                for (const index in this.lastWalls) {
+                    this.ctx.strokeStyle = `yellow`
+                    this.drawWall(labyrinthe, this.lastWalls[index])
+                }
+                this.lastWalls.push(current)
+                if (this.lastWalls.length > 3) {
+                    this.lastWalls.shift()
+                }
+            }
+        }
     }
 
     /**
+     * Dessine les bords d'une cellule.
+     *
      * @param {number} x
      * @param {number} y
      * @param {number} sizeX
@@ -86,29 +98,44 @@ export class LabyrintheVue {
         }
         this.ctx.stroke()
     }
-	
-	hightlightCell(cell, fx, fy, style) {
-		this.ctx.fillStyle = style
-		const ox = fx * cell.x
-		const oy = fy * cell.y
-		this.ctx.fillRect(ox + 2, oy + 2, fx - 4, fy - 4)
-	}
-	
-	unvisitedCellFromVisited(labyrinthe, visited = []) {
-		const visitedArray = Array.from(visited)
-		const unvisited = []
-		for (let x = 0; x < labyrinthe.width; x++) {
-			for (let y = 0; y < labyrinthe.height; y++) {
-				if (!visitedArray.some(cellId => {
-					const cell = cellId instanceof Coords ? cellId : Coords.fromIdentifiant(cellId, labyrinthe)
-					return cell.x === x && cell.y === y
-				})) {
-					unvisited.push(new Coords(x, y))
-				}
-			}
-		}
-		return unvisited
-	}
+
+    /**
+     * Met en valeur une cellule.
+     *
+     * @param {Coords} cell
+     * @param {number} fx Largeur d'une seule cellule.
+     * @param {number} fy Hauteur d'une seule cellule.
+     * @param {string} style
+     */
+    highlightCell(cell, fx, fy, style) {
+        this.ctx.fillStyle = style
+        const ox = fx * cell.x
+        const oy = fy * cell.y
+        this.ctx.fillRect(ox + 2, oy + 2, fx - 4, fy - 4)
+    }
+
+    /**
+     * Retourne la liste des cellules non visitées à partir de celles visitées.
+     *
+     * @param {Labyrinthe} labyrinthe
+     * @param {Iterable.<number|Coords>} visited
+     * @return {Coords[]}
+     */
+    unvisitedCellsFromVisited(labyrinthe, visited = []) {
+        const visitedArray = Array.from(visited)
+        const unvisited = []
+        for (let x = 0; x < labyrinthe.width; x++) {
+            for (let y = 0; y < labyrinthe.height; y++) {
+                if (!visitedArray.some(cellId => {
+                    const cell = cellId instanceof Coords ? cellId : Coords.fromIdentifiant(cellId, labyrinthe)
+                    return cell.x === x && cell.y === y
+                })) {
+                    unvisited.push(new Coords(x, y))
+                }
+            }
+        }
+        return unvisited
+    }
 
     /**
      * @param {number} startX
@@ -119,6 +146,17 @@ export class LabyrintheVue {
     drawLine(startX, startY, endX, endY) {
         this.ctx.moveTo(startX, startY)
         this.ctx.lineTo(endX, endY)
+    }
+
+    /**
+     * @param {Labyrinthe} labyrinthe
+     * @param {Mur} wall
+     */
+    drawWall(labyrinthe, wall) {
+        this.ctx.beginPath()
+        const [fx, fy] = this.cellSizes(labyrinthe)
+        this.drawLine(fx * wall.a.x, fy * wall.a.y, fx * wall.b.x, fy * wall.b.y)
+        this.ctx.stroke()
     }
 
     clear() {
