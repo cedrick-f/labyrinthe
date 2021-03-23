@@ -42,6 +42,21 @@ export class Labyrinthe {
 	mursCellule(x, y) {
 		return this.voisinsCellule(x, y).map(voisin => new Mur(new Coords(x, y), voisin));
 	}
+	
+	tousLesMurs() {
+		let l = []
+		for (let y in length(height)) {
+			for (let x in lengh(width)) {
+				if (x < this.width-1) {
+					l.push([Coords(x, y), Coords(x+1, y)])
+				}
+				if (y < this.height-1) {
+					l.push([Coords(x, y), Coords(x, y+1)])
+				}
+			}
+		}
+		return l
+	}
 
 	/**
 	 * @param {Coords} a
