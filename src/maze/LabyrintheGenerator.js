@@ -25,48 +25,34 @@ export function generatorFromName(name, labyrinthe) {
 class Fusion {
 	constructor(labyrinthe) {
 		this.labyrinthe = labyrinthe
-		this.construire_fusion()
-	}
+		this.n = labyrinthe.width * labyrinthe.height
 		
-	construire_fusion(){
-		this.grille = []
-		let i = 0
-		for (let y = 0; y < this.labyrinthe.height; y++) {
-			let l = []
-			for (let x = 0; x < this.labyrinthe.width; x++) {
-				l.push(Coords.identifiant(x, y, this.labyrinthe))
+		this.grille = {}
+		for (let c =0 ; c < this.n ; c++) {
+			this.grille[c] = c
 			}
-			this.grille.push(l)
-		}
+			
+		this.murs = labyrinthe.tousLesMurs();
+		// à mélanger
 		
-		debugger
 	}
-	
-	next() {
-		const x = randomInt(this.labyrinthe.width)
-		const y = randomInt(this.labyrinthe.height)
-		let cellule = new Coords(x, y)
-		let voisins = this.labyrinthe.voisinsCellule(x, y)
-		let voisinRandom = randomChoice(voisins)
-		let celluleIdentifiant = this.grille[y][x]
-		let voisinIdentifiant = this.grille[voisinRandom.y][voisinRandom.x]
-		if (celluleIdentifiant !== voisinIdentifiant) {
-			this.labyrinthe.ouvrir_passage(cellule, voisinRandom)
-		}
 		
+
+	next() {
+		let mur = this.murs[0];
+		if (this.grille[mur[0]] !== this.grille[mur[1]]) {
+			this.labyrinthe.ouvrir_passage(mur[0], mur[1]);
+			for (let c of this.labyrinthe.parcours_profondeur(mur[0])) {
+				grille[c] = grille[mur[0]];
+			}
+		this.murs.splice(0);
+		}
 	}
 	
 	hasNext() {
-		for (let ligne of this.grille) {
-			for (let cellule of this.grille) {
-				if (cellule > 0) {
-					return true
-				}
-				
-			}
-		}
-		return false
+		this.murs.length > 0;
 	}
+}
 }
 
 class RandomGenerator {
