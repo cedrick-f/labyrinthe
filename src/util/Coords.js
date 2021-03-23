@@ -33,6 +33,15 @@ export class Coords {
     static identifiant(x, y, labyrinthe) {
         return x + y * labyrinthe.width
     }
+
+    /**
+     * @param {number} identifiant
+     * @param {Labyrinthe} labyrinthe
+     * @return {Coords}
+     */
+    static fromIdentifiant(identifiant, labyrinthe) {
+        return new Coords(identifiant % labyrinthe.width, Math.floor(identifiant / labyrinthe.width))
+    }
 }
 
 export class Mur {

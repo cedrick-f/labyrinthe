@@ -78,15 +78,16 @@ export class Controller {
    */
   onGeneratorStep() {
     const value = this.generator.next()
-    if (value instanceof Mur) {
-      this.maze.ouvrir_passage(value.a, value.b)
-    }
     if (value !== false) {
       this.vue.clear()
-      this.vue.draw(this.maze)
+      this.vue.draw(this.maze, value)
     }
     if (this.generator.hasNext()) {
-      window.setTimeout(this.onGeneratorStep, this.generateTimeout)
+	  if (this.generateTimeout > 2) {
+		window.setTimeout(this.onGeneratorStep, this.generateTimeout)
+	  } else {
+	    this.onGeneratorStep()
+	  }
     }
   }
 
@@ -95,10 +96,8 @@ export class Controller {
    */
   onResize() {
     const canvas = this.vue.canvas
-	canvas.width = 0
-	canvas.height = 0
-    canvas.width = canvas.parentElement.offsetWidth
-    canvas.height = canvas.parentElement.offsetHeight
+    canvas.width = canvas.parentElement.clientWidth
+    canvas.height = canvas.parentElement.clientHeight
     this.vue.draw(this.maze)
   }
 }
