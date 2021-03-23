@@ -78,16 +78,19 @@ export class Controller {
    */
   onGeneratorStep() {
     const value = this.generator.next()
-    if (value !== false) {
+    if (value !== false && this.generateTimeout) {
       this.vue.clear()
       this.vue.draw(this.maze, value)
     }
     if (this.generator.hasNext()) {
-	  if (this.generateTimeout > 2) {
+	  if (this.generateTimeout) {
 		window.setTimeout(this.onGeneratorStep, this.generateTimeout)
 	  } else {
 	    this.onGeneratorStep()
 	  }
+    } else if (!this.generateTimeout) {
+      this.vue.clear()
+      this.vue.draw(this.maze)
     }
   }
 
