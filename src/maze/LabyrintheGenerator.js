@@ -11,7 +11,7 @@ export function generatorFromName(name, labyrinthe) {
 		case "aldous-broder":
 			return new AldousGenerator(labyrinthe)
 		case "fusion":
-			return new AldousGenerator(labyrinthe)
+			return new FusionGenerator(labyrinthe)
 		case "random":
 			return new RandomGenerator(labyrinthe)
 		default:
@@ -68,22 +68,33 @@ class FusionGenerator extends Generator {
 			this.grille[c] = c
 		}
 
+		/*let i = 0
+		for (let y = 0; y < this.height; y++) {
+			for (let x = 0; x < this.width; x++) {
+				this.grille[new Coords(x, y)] = i;
+				i= i + 1 ;
+				}
+			}*/
+		
 		this.murs = shuffle(labyrinthe.tousLesMurs());
+		labyrinthe.fermerTousLesMurs()
 	}
 
 	/**
 	 * @returns {VueParameters}
 	 */
 	next() {
-		let mur = this.murs[0];
-		if (this.grille[mur.a] !== this.grille[mur.b]) {
+		var mur = this.murs[0];
+		let a = mur.a.identifiant(this.labyrinthe)
+		let b = mur.b.identifiant(this.labyrinthe)
+		if (this.grille[a] !== this.grille[b]) {
 			this.labyrinthe.ouvrir_passage(mur.a, mur.b);
 			for (let c of this.labyrinthe.graphe.parcours_profondeur(mur.a)) {
-				this.grille[c] = this.grille[mur.a];
+				this.grille[c.identifiant(this.labyrinthe)] = this.grille[a];
 			}
-			this.murs.splice(0, 1);
 		}
-		return { current: mur }
+		this.murs.splice(0, 1);
+		return { current: mur, grille: this.grille }
 	}
 
 	/**
