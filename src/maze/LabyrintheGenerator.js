@@ -105,6 +105,7 @@ class RandomGenerator extends Generator {
 	constructor(labyrinthe) {
 		super(labyrinthe)
 		this.n = labyrinthe.width * labyrinthe.height
+		labyrinthe.fermerTousLesMurs()
 	}
 
 	/**
@@ -137,6 +138,7 @@ class AldousGenerator extends Generator {
 		this.current = new Coords(randomInt(labyrinthe.width), randomInt(labyrinthe.height))
 		this.visited = new Set()
 		this.n = labyrinthe.width * labyrinthe.height
+		labyrinthe.fermerTousLesMurs()
 	}
 
 	/**

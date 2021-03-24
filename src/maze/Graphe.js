@@ -8,6 +8,14 @@ export class Graphe {
 	}
 
     /**
+     * Suppression de toutes les arêtes
+     */
+     razAretes(sommet) {
+        this.A = {}
+    }
+
+
+    /**
      * @param {T} sommet
      * @return {Set<T>}
      */

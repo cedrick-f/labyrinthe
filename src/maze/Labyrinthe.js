@@ -88,6 +88,22 @@ export class Labyrinthe {
 		return !this.graphe.voisins(Coords.identifiant(ax, ay, this)).has(Coords.identifiant(bx, by, this))
 	}
 
+	/**
+	 * 
+	 */
+	fermerTousLesMurs() {
+		this.graphe.razAretes();
+	}
+
+	/**
+	 * 
+	 */
+	 ouvrirTousLesMurs() {
+		for (let mur of this.tousLesMurs) {
+			this.ouvrir_passage(mur.a, mur.b)
+		}
+	}
+
 	/**aller d'un point a à un point b avec le plus court chemin (methode d'axel dans Graphe)
 	 * quel point a, quel point b ? (les plus éloignés possibles)
 	 *
