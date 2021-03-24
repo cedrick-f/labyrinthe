@@ -31,6 +31,7 @@ class Generator {
 	 */
 	constructor(labyrinthe) {
 		this.labyrinthe = labyrinthe
+		labyrinthe.fermerTousLesMurs()
 	}
 
 	/**
@@ -116,7 +117,6 @@ class RandomGenerator extends Generator {
 	constructor(labyrinthe) {
 		super(labyrinthe)
 		this.n = labyrinthe.width * labyrinthe.height
-		labyrinthe.fermerTousLesMurs()
 	}
 
 	/**
@@ -149,7 +149,6 @@ class AldousGenerator extends Generator {
 		this.current = new Coords(randomInt(labyrinthe.width), randomInt(labyrinthe.height))
 		this.visited = new Set()
 		this.n = labyrinthe.width * labyrinthe.height
-		labyrinthe.fermerTousLesMurs()
 	}
 
 	/**
@@ -162,7 +161,7 @@ class AldousGenerator extends Generator {
 			this.labyrinthe.ouvrir_passage(this.current, cell)
 		}
 		this.current = cell
-		return {current: this.current, visited: this.visited}
+		return { current: this.current, visited: this.visited }
 	}
 
 	/**
