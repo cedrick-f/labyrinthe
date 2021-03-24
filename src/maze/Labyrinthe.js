@@ -89,17 +89,17 @@ export class Labyrinthe {
 	}
 
 	/**
-	 * 
+	 * Ferme tous les murs entre les cellules.
 	 */
 	fermerTousLesMurs() {
 		this.graphe.razAretes();
 	}
 
 	/**
-	 * 
+	 * Retire tous les murs entre les cellules du labyrinthe.
 	 */
 	 ouvrirTousLesMurs() {
-		for (let mur of this.tousLesMurs) {
+		for (let mur of this.tousLesMurs()) {
 			this.ouvrir_passage(mur.a, mur.b)
 		}
 	}
