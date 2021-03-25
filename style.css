@@ -42,3 +42,7 @@ button {
 .reverse {
     direction: rtl;
 }
+
+input[name="info"] {
+    float: right;
+}

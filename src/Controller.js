@@ -32,6 +32,10 @@ export class Controller {
     this.generateTimeout = parseInt(buildSpeedInput.value)
     buildSpeedInput.addEventListener('input', this.onSpeedChange)
 
+    for (const element of container.querySelectorAll("input[name='info']")) {
+      element.addEventListener('click', this.onInfoClick.bind(this))
+    }
+
     window.addEventListener('resize', this.onResize)
     this.onResize()
   }
@@ -71,6 +75,15 @@ export class Controller {
     if (this.generator.hasNext()) {
       this.onGeneratorStep()
     }
+  }
+
+  /**
+   * Lorsqu'on clique sur un bouton d'information.
+   *
+   * @param {MouseEvent} event
+   */
+   onInfoClick(event) {
+    alert("Info")
   }
 
   /**
