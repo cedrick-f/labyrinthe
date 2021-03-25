@@ -105,7 +105,33 @@ export class Controller {
    * @param {MouseEvent} event
    */
    onInfoClick(event) {
-    alert("Info "+event.target.id)
+    let html = ""
+    switch (event.target.id) {
+      case 'info_random':
+        html = "info_random.html"
+        break;
+      case 'info_fusion':
+        html = "info_fusion.html"
+        break;
+      case 'info_prim':
+        html = "info_prim.html"
+        break;
+      case 'info_aldous-broder':
+        html = "info_aldous.html"
+        break;
+      default:
+        return
+    }
+
+
+    // chargement du message d'information (dans le div concerné)
+    $(function(){
+      $("#popup-message").load(html); 
+    });
+    var modal = document.getElementById("modal-container");
+    if (modal) {
+      modal.style.display = "block";
+    }
   }
 
   /**

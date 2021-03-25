@@ -1,0 +1,14 @@
+<h3>Fusion aléatoire de chemins</h3>
+<ul>
+ 	<li>On part d'un labyrinthe dont tous les murs sont fermés,</li>
+ 	<li>On associe une valeur unique (un <strong>identifiant</strong>) à chaque cellule,</li>
+ 	<li>À chaque itération, on choisit un mur à ouvrir de manière aléatoire,</li>
+ 	<li>Lorsqu'un mur est ouvert entre deux cellules adjacentes, les deux cellules sont liées entre elles et forment un "chemin".</li>
+ 	<li>À chaque fois que l'on tente d'ouvrir un passage entre deux cellules, on vérifie que ces deux cellules ont des identifiants différents.
+<ul>
+ 	<li>Si les identifiants sont identiques, c'est que les deux cellules sont déjà reliées et appartiennent donc au même chemin. On ne peut donc pas ouvrir le passage.</li>
+ 	<li>Si les identifiants sont différents, le passage est ouvert, et l'identifiant de la première cellule est affecté à toutes les cellules du second chemin.</li>
+</ul>
+</li>
+</ul>
+<img class="alignnone size-full" src="https://upload.wikimedia.org/wikipedia/commons/6/69/Yl_maze_ani_algo1.gif" width="176" height="149" />

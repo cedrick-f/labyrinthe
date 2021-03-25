@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Labyrinthe</title>
     <link rel="stylesheet" href="/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <section>
@@ -44,13 +45,30 @@
             </div>
         </div>
     </section>
-    <div id="myModal" class="modal">
+
+    <!-- Modal container : une zone permettant d'afficher des informations dans un popup en modal -->
+    <div id="modal-container" class="modal">
         <!-- Modal content -->
         <div class="modal-content">
           <span class="close">&times;</span>
           <div id="popup-message"></div>
         </div>
       </div>
+      
     <script src="/src/main.js" type="module"></script>
 </body>
+<script>
+    var modal = document.getElementById("modal-container");
+    if (modal) {
+        var span = document.getElementsByClassName("close")[0];
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+    }
+    </script>
 </html>

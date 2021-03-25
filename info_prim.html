@@ -1,0 +1,20 @@
+<h3>Algorithme de Prim</h3>
+On part d'un labyrinthe dont tous les murs sont fermés.
+
+On crée :
+<ul>
+ 	<li>une liste de cellules "non visitées" (pleine au départ)</li>
+ 	<li>une liste de murs (initialement les murs adjacents d'une cellule choisie aléatoirement)</li>
+</ul>
+Tant qu'il y a des murs dans la liste :
+<ul>
+ 	<li>on choisit un mur au hasard dans la liste.</li>
+ 	<li>si une seule des deux cellules que le mur divise est visitée, alors :
+<ul>
+ 	<li>on ouvre un passage à travers ce mur</li>
+ 	<li>on marque la cellule "non visitée" comme "visitée" (on la supprime de la liste)</li>
+ 	<li>on ajoute les murs voisins de la cellule à la liste des murs.</li>
+</ul>
+</li>
+ 	<li>on retire le mur de la liste.</li>
+</ul>
