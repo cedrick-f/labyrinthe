@@ -5,8 +5,7 @@
     <title>Labyrinthe</title>
     <link rel="icon" type="image/png" href="labyrinthe.png" />
     <link rel="stylesheet" href="/style.css">
-    <script defer src="https://friconix.com/cdn/friconix-0.2116.js"> </script> 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="https://friconix.com/cdn/friconix-0.2116.js"> </script>
 </head>
 <body>
     <section>
@@ -25,10 +24,25 @@
                         <label for="height">Hauteur</label>
                     </div>
                     <h4>Algorithme de construction</h4>
-					<div class="form-group"><input type="radio" name="algorithm" id="random" checked /><label for="random">Random</label><input type="button" name="info" id="info_random" value="?" title="Plus d'informations"/></div>
-                    <div class="form-group"><input type="radio" name="algorithm" id="fusion" /><label for="fusion">Fusion</label><input type="button" name="info" id="info_fusion" value="?" title="Plus d'informations"/></div>
-                    <div class="form-group"><input type="radio" name="algorithm" id="prim" /><label for="prim">Prim</label><input type="button" name="info" id="info_prim" value="?" title="Plus d'informations"/></div>
-                    <div class="form-group"><input type="radio" name="algorithm" id="aldous-broder" /><label for="aldous-broder">Aldous-Broder</label><input type="button" name="info" id="info_aldous-broder" value="?" title="Plus d'informations"/></div>
+                    <div class="form-group">
+                        <input type="radio" name="algorithm" id="random" checked />
+                        <label for="random">Random</label>
+                        <a href="info_random.html" class="button modal-action" title="Plus d'informations">?</a>
+                    </div>
+                    <div class="form-group"><input type="radio" name="algorithm" id="fusion" />
+                        <label for="fusion">Fusion</label>
+                        <a href="info_fusion.html" class="button modal-action" title="Plus d'informations">?</a>
+                    </div>
+                    <div class="form-group">
+                        <input type="radio" name="algorithm" id="prim" />
+                        <label for="prim">Prim</label>
+                        <a href="info_prim.html" class="button modal-action" title="Plus d'informations">?</a>
+                    </div>
+                    <div class="form-group">
+                        <input type="radio" name="algorithm" id="aldous-broder" />
+                        <label for="aldous-broder">Aldous-Broder</label>
+                        <a href="info_aldous.html" class="button modal-action" title="Plus d'informations">?</a>
+                    </div>
                     <button id="build"><i class="fi-xwsuxx-pen"></i> Construire</button>
                     <div class="form-group">
                         <input type="range" min="0" max="200" id="build-speed" class="reverse" /><br />
@@ -49,30 +63,14 @@
         </div>
     </section>
 
-    <!-- Modal container : une zone permettant d'afficher des informations dans un popup en modal -->
-    <div id="modal-container" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content">
-          <span class="close">&times;</span>
-          <div id="popup-message"></div>
+    <div id="modal-container" hidden>
+        <div role="dialog" class="modal-content"> <!-- dialog n'est actuellement pas supporté par Firefox -->
+            <span class="close" tabindex="0">&times;</span>
+            <div id="popup-message"></div>
         </div>
-      </div>
+    </div>
 
     <script src="/src/main.js" type="module"></script>
-<footer><a href="https://github.com/cedrick-f/labyrinthe" target="_blank"><i class="fi-xnsuxl-github"></i> Voir sur GitHub</a></footer>
+    <footer><a href="https://github.com/cedrick-f/labyrinthe" target="_blank"><i class="fi-xnsuxl-github"></i> Voir sur GitHub</a></footer>
 </body>
-<script>
-    var modal = document.getElementById("modal-container");
-    if (modal) {
-        var span = document.getElementsByClassName("close")[0];
-        span.onclick = function() {
-          modal.style.display = "none";
-        }
-        window.onclick = function(event) {
-          if (event.target == modal) {
-            modal.style.display = "none";
-          }
-        }
-    }
-    </script>
 </html>

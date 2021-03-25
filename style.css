@@ -25,12 +25,18 @@ h4 {
 .grid > div:first-child {
     padding: .75rem;
 }
-button {
+button, .button {
     margin-top: .5rem;
 	padding: .6rem 1rem;
-	background-color: #14a7ff;
+	background-color: #5bc0de;
 	border: none;
 	cursor: pointer;
+}
+button:hover, .button:hover {
+    background-color: #42b6d9;
+}
+.button {
+    text-decoration: none;
 }
 .form-group {
     display: flex;
@@ -50,48 +56,66 @@ input[name="info"] {
     flex-grow: 1;
 }
 
-
-/****************************************************************************************
-* Pour les Popup
-*****************************************************************************************/
-/*************************************************************/
-/* The Modal (background) */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
+#modal-container {
+    position: fixed;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  }
-  
-  /* Modal Content */
-  .modal-content {
-    background-color: #FFF6C4;
-    margin: auto;
-    padding: 10px;
-    border: 1px solid #888;
-    width: 80%;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background: rgba(0,0,0,.7);
+    animation: fadeIn .3s both;
+}
+
+dialog, [role=dialog] {
+    position: relative;
+    bottom: 10vh;
+    z-index: 10;
+    background-color: #fafafa;
+    border: 0;
+    padding: 2rem;
+    border-radius: 4px;
+    max-height: 80%;
+    max-width: 60rem;
+    overflow: auto;
+    margin: 0 auto;
     box-shadow: 6px 6px 4px 1px #555;
-    border-radius: 5px;
-  }
-  
-  /* The Close Button */
-  .close {
-    color: #aaaaaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
-    color: #000;
-    text-decoration: none;
+    animation: slideFromTop .3s .1s both;
+}
+#popup-message {
+    margin-bottom: 1rem;
+}
+.close {
+    position: absolute;
+    right: 16px;
+    top: 8px;
+    font-size: 32px;
+    opacity: .4;
+    background-color: inherit;
+    padding: 0;
     cursor: pointer;
-  }
+}
+.close:hover, .close:focus {
+    opacity: .6;
+}
+[hidden] {
+    display: none !important;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@keyframes slideFromTop {
+    from {
+        transform: translateY(-10vh);
+    }
+    to {
+        transform: translateY(-5vh);
+    }
+}
