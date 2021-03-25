@@ -120,26 +120,35 @@ export class Labyrinthe {
 		}
 	}
 
-	/**aller d'un point a à un point b avec le plus court chemin (methode d'axel dans Graphe)
-	 * quel point a, quel point b ? (les plus éloignés possibles)
-	 *
-	 * fonction à modifier
-	parcours_largeur(from) {
-		if (!(from in this.A)) {
-			return []
+	toutesCellulesLaterales() {
+		let l = []
+		for (let y = 0; y < this.height; y++) {
+			l.push(new Coords(x = 0, y))
+			l.push(new Coords(x = this.width-1, y))
 		}
-		let r = []
-        let s = []
-        s.push(from)
-        while (s.length) {
-            let p = s.shift()
-            if (!(r.includes(p))) {
-                r.push(p)
-                for (let e of this.voisins(p)) {
-                    s.push(e)
+		for (let x = 1; x < this.width-1; x++) {
+			l.push(new Coords(x, y = 0))
+			l.push(new Coords(x, y = this.height-1))
+		}
+		return l
+	}
+
+	trouverPlusLongChemin() {
+		let l = toutesCellulesLaterales()
+		let c = 0 //chemin
+		for (i of l.lengh) {
+			for (jesaispasquoimettre ;_;) {
+				let g = Graphe.chemin(x, y)
+				if (g.lengh > c) {
+					c = g.lengh
 				}
 			}
 		}
-        return r
+		return //tableau de cellules
+	}
+
+	/**aller d'un point a à un point b avec le plus court chemin (methode d'axel dans Graphe)
+	 * quel point a, quel point b ? (les plus éloignés possibles)
+	 * utiliser chemin(x, y)
      */
 }
