@@ -34,6 +34,8 @@ export class Controller {
 
     window.addEventListener('resize', this.onResize)
     this.onResize()
+
+    this.timeoutId = 0
   }
 
   /**
@@ -65,6 +67,7 @@ export class Controller {
    * @param {MouseEvent} event
    */
   onBuildClick(event) {
+    window.clearInterval(this.timeoutId)
     const algorithmRadio = this.container.querySelector('input[name="algorithm"]:checked').id
     this.generator = generatorFromName(algorithmRadio, this.maze)
 
@@ -84,7 +87,7 @@ export class Controller {
     }
     if (this.generator.hasNext()) {
 	  if (this.generateTimeout) {
-		window.setTimeout(this.onGeneratorStep, this.generateTimeout)
+		  this.timeoutId = window.setTimeout(this.onGeneratorStep, this.generateTimeout)
 	  } else {
 	    this.onGeneratorStep()
 	  }
