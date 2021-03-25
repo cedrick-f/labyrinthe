@@ -122,14 +122,13 @@ export class LabyrintheVue {
      * @return {Coords[]}
      */
     unvisitedCellsFromVisited(labyrinthe, visited = []) {
-        const visitedArray = Array.from(visited)
+        const visitedSet = new Set(Array.from(visited).map(cellId =>
+            cellId instanceof Coords ? cellId.identifiant(labyrinthe) : cellId
+        ))
         const unvisited = []
         for (let x = 0; x < labyrinthe.width; x++) {
             for (let y = 0; y < labyrinthe.height; y++) {
-                if (!visitedArray.some(cellId => {
-                    const cell = cellId instanceof Coords ? cellId : Coords.fromIdentifiant(cellId, labyrinthe)
-                    return cell.x === x && cell.y === y
-                })) {
+                if (!visitedSet.has(Coords.identifiant(x, y, labyrinthe))) {
                     unvisited.push(new Coords(x, y))
                 }
             }
