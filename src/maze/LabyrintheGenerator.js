@@ -90,8 +90,9 @@ class FusionGenerator extends Generator {
 		let b = mur.b.identifiant(this.labyrinthe)
 		if (this.grille[a] !== this.grille[b]) {
 			this.labyrinthe.ouvrir_passage(mur.a, mur.b);
-			for (let c of this.labyrinthe.graphe.parcours_profondeur(mur.a)) {
-				this.grille[c.identifiant(this.labyrinthe)] = this.grille[a];
+			let ch = this.labyrinthe.graphe.parcours_profondeur(mur.a.identifiant(this.labyrinthe))
+			for (let c of ch) {
+				this.grille[c] = this.grille[a];
 			}
 		}
 		this.murs.splice(0, 1);

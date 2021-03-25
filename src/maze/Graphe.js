@@ -10,7 +10,17 @@ export class Graphe {
     /**
      * Suppression de toutes les arêtes
      */
-     razAretes(sommet) {
+     razAretes() {
+        for (let s in this.A) {
+            this.A[s] = new Set()
+        }
+        
+    }
+
+    /**
+     * Suppression de toutes les sommets
+     */
+     razSommets() {
         this.A = {}
     }
 
@@ -101,12 +111,17 @@ export class Graphe {
 			}
 		}
 	}
-	
+
+	/**
+     * 
+     * @param {*} from 
+     * @returns 
+     */
 	parcours_profondeur(from) {
 		if (!(from in this.A)) {
 			return []
 		}
-		let r = []
+		let r = []  // sommets visités
         let s = []
         s.push(from)
         while (s.length) {

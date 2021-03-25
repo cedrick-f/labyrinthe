@@ -10,7 +10,22 @@ export class Labyrinthe {
 		this.width = width
 		this.height = height
 		this.graphe = new Graphe()
+		this.creerCellules()
 	}
+
+	/**
+	 * Création de tous les sommets du graphe (cellules du labyrinthe)
+	 */
+	creerCellules() {
+		this.graphe.razSommets();
+		for (let y = 0; y < this.height; y++) {
+			for (let x = 0; x < this.width; x++) {
+				this.graphe.ajouter_sommet(Coords.identifiant(x, y, this))
+			}
+		}
+		
+	}
+
 
 	/**
 	 * @param {number} x
