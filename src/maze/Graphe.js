@@ -71,8 +71,10 @@ export class Graphe {
 		}
         return r
 	}
-	
-	chemins(from) {
+    /**
+    * Renvoie tous les chemins du parcours en largeur
+    */
+	parcours_largeur_chemins(from) {
 		if (!(from in this.A)) {
 			return []
 		}
@@ -94,14 +96,16 @@ export class Graphe {
 		}
 		return r
 	}
-	
+    /**
+    * Renvoie le chemin le plus court sous forme de liste
+    */
 	chemin(x, y) {
-        let chemins = this.chemins(x)
-        if (!(y in chemins)) {
+        let parcours_largeur_chemins = this.parcours_largeur_chemins(x)
+        if (!(y in parcours_largeur_chemins)) {
             return None
 		}
         let r = []
-        for (let onsenfoutdecettevariable in chemins) {
+        for (let onsenfoutdecettevariable in parcours_largeur_chemins) {
             r.push(y)
             y = paths[y]
             if (y === x) {
