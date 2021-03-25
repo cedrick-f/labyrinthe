@@ -25,9 +25,6 @@ h4 {
 .grid > div:first-child {
     padding: .75rem;
 }
-input {
-    vertical-align: middle;
-}
 button {
     margin-top: .5rem;
 	padding: .6rem 1rem;
