@@ -36,6 +36,8 @@ button {
 	cursor: pointer;
 }
 .form-group {
+    display: flex;
+    align-items: center;
 	margin-top: .25rem;
 	margin-bottom: .25rem;
 }
@@ -44,5 +46,9 @@ button {
 }
 
 input[name="info"] {
-    float: right;
+    align-self: auto;
+}
+
+.form-group label{
+    flex-grow: 1;
 }

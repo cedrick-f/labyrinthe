@@ -86,7 +86,7 @@ export class Controller {
    * @param {MouseEvent} event
    */
    onInfoClick(event) {
-    alert("Info")
+    alert("Info "+event.target.id)
   }
 
   /**
