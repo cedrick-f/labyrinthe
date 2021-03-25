@@ -1,4 +1,5 @@
 import {Coords, Mur} from "../util/Coords.js";
+import {LabyrintheImage} from "../maze/Labyrinthe.js";
 
 /**
  * @typedef VueParameters
@@ -135,21 +136,20 @@ export class LabyrintheVue {
      *
      * @param {Labyrinthe} labyrinthe
      * @param {Iterable.<number|Coords>} visited
-     * @return {Coords[]}
+     * @return {Iterable.<Coords>}
      */
-    unvisitedCellsFromVisited(labyrinthe, visited = []) {
+    *unvisitedCellsFromVisited(labyrinthe, visited = []) {
         const visitedSet = new Set(Array.from(visited).map(cellId =>
             cellId instanceof Coords ? cellId.identifiant(labyrinthe) : cellId
         ))
-        const unvisited = []
-        for (let x = 0; x < labyrinthe.width; x++) {
-            for (let y = 0; y < labyrinthe.height; y++) {
-                if (!visitedSet.has(Coords.identifiant(x, y, labyrinthe))) {
-                    unvisited.push(new Coords(x, y))
+        let id = 0
+        for (let y = 0; y < labyrinthe.height; y++) {
+            for (let x = 0; x < labyrinthe.width; x++) {
+                if (!visitedSet.has(id++)) {
+                    yield new Coords(x, y)
                 }
             }
         }
-        return unvisited
     }
 
     /**
@@ -195,24 +195,56 @@ export class LabyrintheVue {
      */
     drawPathTest(labyrinthe, parameters) {
         if (parameters.current) {
-            this.ctx.fillStyle = 'aqua'
-            this.ctx.fillRect(parameters.current.x, parameters.current.y, 2, 2)
+            this.highlightCell(parameters.current, ...this.cellSizes(labyrinthe), '#8dfdfd')
         }
     }
 
     /**
-     * Affiche le chemin final.
+     * Affiche le chemin final. La première et la dernière position sont marquées d'un rectangle,
+     * les autres permettent de tracer des traits d'une cellule à la précédente/suivante.
      *
      * @param {Labyrinthe} labyrinthe
      * @param {Coords[]} path
      */
     drawPath(labyrinthe, path) {
-        this.ctx.strokeStyle = 'red'
-        this.ctx.beginPath()
-        const [fx, fy] = this.cellSizes(labyrinthe)
-        for (const node of path) {
-            this.drawLine(fx * node.x, fy * node.y, fx * node.x + fx, fy * node.y + fy)
+        if (!path.length) {
+            return;
         }
+
+        this.ctx.strokeStyle = '#ff3030'
+        this.ctx.beginPath()
+
+        // Calcul des dimensions
+        const [fx, fy] = this.cellSizes(labyrinthe)
+        const midFx = fx / 2
+        const midFy = fy / 2
+
+        this.highlightCell(path[0], fx, fy, this.ctx.strokeStyle) // Marquage de la première cellule
+
+        for (let i = 1; i < path.length - 1; i++) {
+            const prev = path[i - 1]
+            const node = path[i]
+            const next = path[i + 1]
+
+            if ((prev.x + 1) === node.x || (next.x + 1) === node.x) { // Left
+                const y = node.y * fy + midFy
+                this.drawLine(node.x * fx, y, node.x * fx + midFx, y)
+            }
+            if ((prev.x - 1) === node.x || (next.x - 1) === node.x) { // Right
+                const y = node.y * fy + midFy
+                this.drawLine(node.x * fx + midFx, y, node.x * fx + fx, y)
+            }
+            if ((prev.y + 1) === node.y || (next.y + 1) === node.y) { // Top
+                const x = node.x * fx + midFx
+                this.drawLine(x, node.y * fy, x, node.y * fy + midFy)
+            }
+            if ((prev.y - 1) === node.y || (next.y - 1) === node.y) { // Bottom
+                const x = node.x * fx + midFx
+                this.drawLine(x, node.y * fy + midFy, x, node.y * fy + fy)
+            }
+        }
+
+        this.highlightCell(path[path.length - 1], fx, fy, this.ctx.strokeStyle) // Marquage de la dernière cellule
         this.ctx.stroke()
     }
 
@@ -225,6 +257,9 @@ export class LabyrintheVue {
      * @return {[number, number]}
      */
     cellSizes(labyrinthe) {
+        if (labyrinthe instanceof LabyrintheImage) {
+            return [1, 1]
+        }
         return [this.canvas.width / labyrinthe.width, this.canvas.height / labyrinthe.height]
     }
 }

@@ -22,17 +22,20 @@ class MazeSolver {
      */
     constructor(labyrinthe) {
         this.labyrinthe = labyrinthe
-        /*this.start = new Coords(0, 0)
-        this.goal = new Coords(labyrinthe.width - 1, labyrinthe.height - 1)*/
-        this.start = new Coords(432, 550)
-        this.goal = new Coords(411, 550)
+        this.start = new Coords(0, 0)
+        this.goal = new Coords(labyrinthe.width - 1, labyrinthe.height - 1)
         this.startId = this.start.identifiant(labyrinthe)
         this.goalId = this.goal.identifiant(labyrinthe)
+        /** @type {Coords[]} */
         this.path = []
     }
 
     /**
-     * @return {Coords|VueParameters}
+     * Effectue le tour suivant de résolution.
+     *
+     * Si un chemin est découvert, il doit être affecté à this.path et hasNext doit renvoyer false.
+     *
+     * @return {VueParameters}
      */
     next() {
         return {}
@@ -77,6 +80,9 @@ class AStarSolver extends MazeSolver {
         this.costEstimate = costEstimate
     }
 
+    /**
+     * @return {VueParameters}
+     */
     next() {
         // Recherche du noeud avec le plus faible fScore
         let current = -1
@@ -92,7 +98,7 @@ class AStarSolver extends MazeSolver {
         // Chemin trouvé !
         if (current === this.goalId) {
             this.path = reconstructPath(this.cameFrom, this.goalId, this.labyrinthe)
-            return { path: this.path }
+            return {}
         }
 
         this.openSet.delete(current)
@@ -147,7 +153,7 @@ class AStarSolver extends MazeSolver {
  */
 function reconstructPath(cameFrom, current, labyrinthe) {
     const totalPath = []
-    while (current) {
+    while (current > -1) {
         totalPath.push(Coords.fromIdentifiant(current, labyrinthe))
         current = cameFrom[current]
     }

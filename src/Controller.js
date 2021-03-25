@@ -34,6 +34,7 @@ export class Controller {
       element.addEventListener('input', this.onDimensionsChange)
     }
     container.querySelector('#build').addEventListener('click', this.onBuildClick.bind(this))
+    container.querySelector('#solve').addEventListener('click', this.onSolveClick.bind(this))
     this.generateTimeout = parseInt(buildSpeedInput.value)
     buildSpeedInput.addEventListener('input', this.onSpeedChange)
     this.solveTimeout = parseInt(solveSpeedInput.value)
@@ -96,6 +97,19 @@ export class Controller {
 
     if (this.generator.hasNext()) {
       this.onGeneratorStep()
+    }
+  }
+
+  /**
+   * Lorsqu'on clique pour résoudre le labyrinthe.
+   *
+   * @param {MouseEvent} event
+   */
+  onSolveClick(event) {
+    window.clearInterval(this.timeoutId)
+    this.solver = solverByName('astar', this.maze)
+    if (this.solver.hasNext()) {
+      this.onSolverStep()
     }
   }
 
@@ -164,6 +178,8 @@ export class Controller {
     if (this.solveTimeout) {
       if (this.solver.hasNext()) {
         this.timeoutId = window.setTimeout(this.onSolverStep, this.solveTimeout)
+      } else {
+        this.vue.drawPath(this.maze, this.solver.path)
       }
     } else {
       while (this.solver.hasNext()) {
@@ -204,5 +220,8 @@ export class Controller {
     canvas.width = canvas.parentElement.offsetWidth
     canvas.height = canvas.parentElement.offsetHeight
     this.vue.draw(this.maze)
+    if (this.solver) {
+      this.vue.drawPath(this.maze, this.solver.path)
+    }
   }
 }
