@@ -74,7 +74,7 @@ export class LabyrintheVue {
                 for (let y = 0; y < labyrinthe.height; y++) {
                     const value = properties.grille[Coords.identifiant(x, y, labyrinthe)]
                     if (typeof value === 'number') {
-                        this.ctx.fillText(value, x * fx + midFx, y * fy + midFy, fx)
+                        this.ctx.fillText(value.toString(), x * fx + midFx, y * fy + midFy, fx)
                     }
                 }
             }
@@ -171,6 +171,48 @@ export class LabyrintheVue {
         this.ctx.beginPath()
         const [fx, fy] = this.cellSizes(labyrinthe)
         this.drawLine(fx * wall.a.x, fy * wall.a.y, fx * wall.b.x, fy * wall.b.y)
+        this.ctx.stroke()
+    }
+
+    /**
+     * Affiche l'image dans le canevas et retourne les données de celle-ci.
+     *
+     * @param {ImageBitmap} bitmap
+     * @return {ImageData}
+     */
+    drawBitmap(bitmap) {
+        this.canvas.width = bitmap.width
+        this.canvas.height = bitmap.height
+        this.ctx.drawImage(bitmap, 0, 0)
+        return this.ctx.getImageData(0, 0, bitmap.width, bitmap.height)
+    }
+
+    /**
+     * Affiche le chemin comme ayant été testé.
+     *
+     * @param {Labyrinthe} labyrinthe
+     * @param {VueParameters} parameters
+     */
+    drawPathTest(labyrinthe, parameters) {
+        if (parameters.current) {
+            this.ctx.fillStyle = 'aqua'
+            this.ctx.fillRect(parameters.current.x, parameters.current.y, 2, 2)
+        }
+    }
+
+    /**
+     * Affiche le chemin final.
+     *
+     * @param {Labyrinthe} labyrinthe
+     * @param {Coords[]} path
+     */
+    drawPath(labyrinthe, path) {
+        this.ctx.strokeStyle = 'red'
+        this.ctx.beginPath()
+        const [fx, fy] = this.cellSizes(labyrinthe)
+        for (const node of path) {
+            this.drawLine(fx * node.x, fy * node.y, fx * node.x + fx, fy * node.y + fy)
+        }
         this.ctx.stroke()
     }
 

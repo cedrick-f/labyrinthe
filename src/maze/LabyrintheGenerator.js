@@ -4,7 +4,7 @@ import {randomInt, randomChoice, shuffle} from "../util/Random.js";
 /**
  * @param {('random'|'fusion'|'prim'|'aldous-broder')} name
  * @param {Labyrinthe} labyrinthe
- * @return {{ next: function (): VueParameters|void, hasNext: function (): boolean }}
+ * @return {MazeGenerator}
  */
 export function generatorFromName(name, labyrinthe) {
 	switch (name) {
@@ -15,14 +15,14 @@ export function generatorFromName(name, labyrinthe) {
 		case "random":
 			return new RandomGenerator(labyrinthe)
 		default:
-			return new Generator(labyrinthe)
+			return new MazeGenerator(labyrinthe)
 	}
 }
 
 /**
  * Base pour un générateur de labyrinthe, à étendre.
  */
-class Generator {
+class MazeGenerator {
 
 	/**
 	 * Le générateur reçoit en paramètre le labyrinthe.
@@ -55,7 +55,7 @@ class Generator {
 
 
 
-class FusionGenerator extends Generator {
+class FusionGenerator extends MazeGenerator {
 
 	/**
 	 * @param {Labyrinthe} labyrinthe
@@ -110,7 +110,7 @@ class FusionGenerator extends Generator {
 /**
  * Un générateur qui choisit des murs de manière totalement aléatoire, ce qui ne crée pas un labyrinthe parfait.
  */
-class RandomGenerator extends Generator {
+class RandomGenerator extends MazeGenerator {
 
 	/**
 	 * @param {Labyrinthe} labyrinthe
@@ -140,7 +140,7 @@ class RandomGenerator extends Generator {
 	}
 }
 
-class AldousGenerator extends Generator {
+class AldousGenerator extends MazeGenerator {
 
 	/**
 	 * @param {Labyrinthe} labyrinthe

@@ -152,3 +152,19 @@ export class Labyrinthe {
 	 * utiliser chemin(x, y)
      */
 }
+
+export class LabyrintheImage extends Labyrinthe {
+
+	/**
+	 * @param {ImageData} imageData
+	 */
+	constructor(imageData) {
+		super(imageData.width, imageData.height)
+		this.imageData = imageData
+	}
+
+	murEntre(ax, ay, bx, by) {
+		const index = (bx + by * this.imageData.width) * 4
+		return this.imageData.data[index] < 220 || this.imageData.data[index + 1] < 220 || this.imageData.data[index + 2] < 220
+	}
+}

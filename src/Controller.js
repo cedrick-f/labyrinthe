@@ -1,7 +1,7 @@
-import {Labyrinthe} from './maze/Labyrinthe.js';
+import {Labyrinthe, LabyrintheImage} from './maze/Labyrinthe.js';
 import {LabyrintheVue} from './vue/LabyrintheVue.js';
 import {generatorFromName} from './maze/LabyrintheGenerator.js';
-import {Mur} from './util/Coords.js';
+import {solverByName} from './maze/LabyrintheSolver.js';
 
 export class Controller {
   /**
@@ -14,6 +14,7 @@ export class Controller {
     this.onSpeedChange = this.onSpeedChange.bind(this)
     this.onResize = this.onResize.bind(this)
     this.onGeneratorStep = this.onGeneratorStep.bind(this)
+    this.onSolverStep = this.onSolverStep.bind(this)
 
     /** @type {HTMLInputElement} */
     const widthInput = container.querySelector('#width')
@@ -21,6 +22,10 @@ export class Controller {
     const heightInput = container.querySelector('#height')
     /** @type {HTMLInputElement} */
     const buildSpeedInput = container.querySelector('#build-speed')
+    /** @type {HTMLInputElement} */
+    const solveSpeedInput = container.querySelector('#solve-speed')
+    /** @type {HTMLInputElement} */
+    const imgInput = container.querySelector('#img-input')
 
     this.maze = new Labyrinthe(parseInt(widthInput.value), parseInt(heightInput.value))
     this.vue = new LabyrintheVue(container.querySelector('canvas'))
@@ -31,10 +36,19 @@ export class Controller {
     container.querySelector('#build').addEventListener('click', this.onBuildClick.bind(this))
     this.generateTimeout = parseInt(buildSpeedInput.value)
     buildSpeedInput.addEventListener('input', this.onSpeedChange)
+    this.solveTimeout = parseInt(solveSpeedInput.value)
+    solveSpeedInput.addEventListener('input', this.onSpeedChange)
+
+    imgInput.addEventListener('change', this.onImageInput.bind(this))
 
     for (const element of container.querySelectorAll("input[name='info']")) {
       element.addEventListener('click', this.onInfoClick.bind(this))
     }
+
+    /** @type {null|MazeGenerator} */
+    this.generator = null
+    /** @type {null|MazeSolver} */
+    this.solver = null
 
     window.addEventListener('resize', this.onResize)
     this.onResize()
@@ -62,7 +76,12 @@ export class Controller {
    * @param {InputEvent} event
    */
   onSpeedChange(event) {
-    this.generateTimeout = parseInt(event.target.value)
+    const timeout = parseInt(event.target.value)
+    if (event.target.id.includes('solve')) {
+      this.solveTimeout = timeout
+    } else {
+      this.generateTimeout = timeout
+    }
   }
 
   /**
@@ -98,15 +117,55 @@ export class Controller {
       this.vue.clear()
       this.vue.draw(this.maze, value)
     }
-	  if (this.generateTimeout) {
-		  this.timeoutId = window.setTimeout(this.onGeneratorStep, this.generateTimeout)
-	  } else {
+    if (this.generateTimeout) {
+      if (this.generator.hasNext()) {
+        this.timeoutId = window.setTimeout(this.onGeneratorStep, this.generateTimeout)
+      }
+    } else {
       while (this.generator.hasNext()) {
-	      this.generator.next()
+        this.generator.next()
       }
       this.vue.clear()
       this.vue.draw(this.maze)
-	  }
+    }
+  }
+
+  onSolverStep() {
+    const value = this.solver.next()
+    if (value !== false && this.solveTimeout) {
+      this.vue.drawPathTest(this.maze, value)
+    }
+    if (this.solveTimeout) {
+      if (this.solver.hasNext()) {
+        this.timeoutId = window.setTimeout(this.onSolverStep, this.solveTimeout)
+      }
+    } else {
+      while (this.solver.hasNext()) {
+        this.solver.next()
+      }
+      this.vue.drawPath(this.maze, this.solver.path)
+    }
+  }
+
+  /**
+   * Lorsqu'une image est importée.
+   *
+   * @param {Event} event
+   */
+  onImageInput(event) {
+    const file = event.target.files[0]
+    if (!file) {
+      return
+    }
+
+    createImageBitmap(file).then(bitmap => {
+      const imageData = this.vue.drawBitmap(bitmap)
+      this.maze = new LabyrintheImage(imageData)
+      this.solver = solverByName('astar', this.maze)
+      if (this.solver.hasNext()) {
+        this.onSolverStep()
+      }
+    });
   }
 
   /**
