@@ -195,7 +195,7 @@ export class LabyrintheVue {
      */
     drawPathTest(labyrinthe, parameters) {
         if (parameters.current) {
-            this.highlightCell(parameters.current, ...this.cellSizes(labyrinthe), '#8dfdfd')
+            this.highlightCell(parameters.current, ...this.cellSizes(labyrinthe), '#c8fdfd')
         }
     }
 

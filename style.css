@@ -103,6 +103,13 @@ dialog, [role=dialog] {
 [hidden] {
     display: none !important;
 }
+
+.button.modal-action {
+    margin: 0;
+    padding: .3rem .5rem;
+    color: inherit;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
