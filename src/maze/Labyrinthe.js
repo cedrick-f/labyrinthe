@@ -11,6 +11,7 @@ export class Labyrinthe {
 		this.height = height
 		this.graphe = new Graphe()
 		this.creerCellules()
+		this.ouvertures = [] // liste des 2 cellules (forcément latérales) où se situent les ouvertures vers l'extérieur
 	}
 
 	/**
