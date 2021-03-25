@@ -98,16 +98,15 @@ export class Controller {
       this.vue.clear()
       this.vue.draw(this.maze, value)
     }
-    if (this.generator.hasNext()) {
 	  if (this.generateTimeout) {
 		  this.timeoutId = window.setTimeout(this.onGeneratorStep, this.generateTimeout)
 	  } else {
-	    this.onGeneratorStep()
-	  }
-    } else if (!this.generateTimeout) {
+      while (this.generator.hasNext()) {
+	      this.generator.next()
+      }
       this.vue.clear()
       this.vue.draw(this.maze)
-    }
+	  }
   }
 
   /**

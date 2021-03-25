@@ -6,11 +6,10 @@
 </head>
 <body>
   <canvas height="500" width="500"></canvas>
-  <script src="Labyrinthe.js" type="module"></script>
   <script type="module">
   import {Labyrinthe} from './Labyrinthe.js'
   import {LabyrintheVue} from '../vue/LabyrintheVue.js'
-  import {Coords} from '../util/Coords'
+  import {Coords} from '../util/Coords.js'
 
   let labyrinthe = new Labyrinthe(10, 10)
   let path = [new Coords(2, 5), new Coords(2, 6), new Coords(3, 6), new Coords(4, 6)]

@@ -5,6 +5,7 @@ import {Coords, Mur} from "../util/Coords.js";
  * @type {object}
  * @property {Coords|Mur|number} [current] Les coordonnées d'une cellule ou d'un mur à mettre en valeur.
  * @property {Iterable.<Coords|number>} [visited] Un itérable avec les coordonnées/identifiants des cellules déjà visitées.
+ * @property {number[]} [grille] Pour chaque identifiant, associe une valeur à afficher à la case.
  */
 
 export class LabyrintheVue {
@@ -60,6 +61,21 @@ export class LabyrintheVue {
                 this.lastWalls.push(current)
                 if (this.lastWalls.length > 3) {
                     this.lastWalls.shift()
+                }
+            }
+        }
+
+        if (properties.grille) {
+            this.ctx.textAlign = 'center'
+            this.ctx.font = '16px sans-serif'
+            const midFx = fx / 2
+            const midFy = fy / 2
+            for (let x = 0; x < labyrinthe.width; x++) {
+                for (let y = 0; y < labyrinthe.height; y++) {
+                    const value = properties.grille[Coords.identifiant(x, y, labyrinthe)]
+                    if (typeof value === 'number') {
+                        this.ctx.fillText(value, x * fx + midFx, y * fy + midFy, fx)
+                    }
                 }
             }
         }
