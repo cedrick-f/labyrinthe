@@ -22,8 +22,8 @@ class MazeSolver {
      */
     constructor(labyrinthe) {
         this.labyrinthe = labyrinthe
-        this.start = new Coords(0, 0)
-        this.goal = new Coords(labyrinthe.width - 1, labyrinthe.height - 1)
+        this.start = labyrinthe.ouvertures[0] || new Coords(0, 0)
+        this.goal = labyrinthe.ouvertures[1] || new Coords(labyrinthe.width - 1, labyrinthe.height - 1)
         this.startId = this.start.identifiant(labyrinthe)
         this.goalId = this.goal.identifiant(labyrinthe)
         /** @type {Coords[]} */

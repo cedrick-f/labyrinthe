@@ -2,6 +2,7 @@ import {Labyrinthe, LabyrintheImage} from './maze/Labyrinthe.js';
 import {LabyrintheVue} from './vue/LabyrintheVue.js';
 import {generatorFromName} from './maze/LabyrintheGenerator.js';
 import {solverByName} from './maze/LabyrintheSolver.js';
+import {GameController} from './GameController.js';
 
 export class Controller {
   /**
@@ -35,16 +36,13 @@ export class Controller {
     }
     container.querySelector('#build').addEventListener('click', this.onBuildClick.bind(this))
     container.querySelector('#solve').addEventListener('click', this.onSolveClick.bind(this))
+    container.querySelector('#play').addEventListener('click', this.onPlayClick.bind(this))
     this.generateTimeout = parseInt(buildSpeedInput.value)
     buildSpeedInput.addEventListener('input', this.onSpeedChange)
     this.solveTimeout = parseInt(solveSpeedInput.value)
     solveSpeedInput.addEventListener('input', this.onSpeedChange)
 
     imgInput.addEventListener('change', this.onImageInput.bind(this))
-
-    for (const element of container.querySelectorAll("input[name='info']")) {
-      element.addEventListener('click', this.onInfoClick.bind(this))
-    }
 
     /** @type {null|MazeGenerator} */
     this.generator = null
@@ -114,38 +112,12 @@ export class Controller {
   }
 
   /**
-   * Lorsqu'on clique sur un bouton d'information.
+   * Lorsqu'on clique pour jouer.
    *
    * @param {MouseEvent} event
    */
-   onInfoClick(event) {
-    let html = ""
-    switch (event.target.id) {
-      case 'info_random':
-        html = "info_random.html"
-        break;
-      case 'info_fusion':
-        html = "info_fusion.html"
-        break;
-      case 'info_prim':
-        html = "info_prim.html"
-        break;
-      case 'info_aldous-broder':
-        html = "info_aldous.html"
-        break;
-      default:
-        return
-    }
-
-
-    // chargement du message d'information (dans le div concerné)
-    $(function(){
-      $("#popup-message").load(html); 
-    });
-    var modal = document.getElementById("modal-container");
-    if (modal) {
-      modal.style.display = "block";
-    }
+   onPlayClick(event) {
+    new GameController(this.container, this.maze, this.vue)
   }
 
   /**
@@ -160,11 +132,14 @@ export class Controller {
     if (this.generateTimeout) {
       if (this.generator.hasNext()) {
         this.timeoutId = window.setTimeout(this.onGeneratorStep, this.generateTimeout)
+      } else {
+        this.maze.trouverPlusLongChemin()
       }
     } else {
       while (this.generator.hasNext()) {
         this.generator.next()
       }
+      this.maze.trouverPlusLongChemin()
       this.vue.clear()
       this.vue.draw(this.maze)
     }

@@ -86,7 +86,7 @@ export class Graphe {
         while (cour.length) {
 			let s = cour.shift()
 			for (let v of this.voisins(s)) {
-				if (!r.includes(v)){
+				if (!(v in r)){
                     suiv.push(v)
                     r[v] = s
 				}

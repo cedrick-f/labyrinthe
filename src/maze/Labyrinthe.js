@@ -120,27 +120,30 @@ export class Labyrinthe {
 		}
 	}
 
+	/**
+	 * @return {Coords[]}
+	 */
 	toutesCellulesLaterales() {
 		let l = []
 		for (let y = 0; y < this.height; y++) {
-			l.push(new Coords(x = 0, y))
-			l.push(new Coords(x = this.width-1, y))
+			l.push(new Coords(0, y))
+			l.push(new Coords(this.width-1, y))
 		}
 		for (let x = 1; x < this.width-1; x++) {
-			l.push(new Coords(x, y = 0))
-			l.push(new Coords(x, y = this.height-1))
+			l.push(new Coords(x, 0))
+			l.push(new Coords(x, this.height-1))
 		}
 		return l
 	}
 
 	trouverPlusLongChemin() {
-		let l = toutesCellulesLaterales()
+		let l = this.toutesCellulesLaterales()
 		let compteChemin = 0
-		for (let i = 0; i < l.lengh; i++) {
-			for (let j = 1; j < l.lengh; j++) {
-				let g = this.graphe.chemin(l[i], l[j])
-				if (g.lengh > compteChemin) {
-					compteChemin = g.lengh
+		for (let i = 0; i < l.length; i++) {
+			for (let j = 1; j < l.length; j++) {
+				let g = this.graphe.chemin(l[i].identifiant(this), l[j].identifiant(this))
+				if (g.length > compteChemin) {
+					compteChemin = g.length
 					this.ouvertures = [l[i], l[j]]
 				}
 			}

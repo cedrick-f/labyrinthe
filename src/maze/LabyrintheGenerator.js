@@ -68,14 +68,6 @@ class FusionGenerator extends MazeGenerator {
 		for (let c = 0; c < size; c++) {
 			this.grille[c] = c
 		}
-
-		/*let i = 0
-		for (let y = 0; y < this.height; y++) {
-			for (let x = 0; x < this.width; x++) {
-				this.grille[new Coords(x, y)] = i;
-				i= i + 1 ;
-				}
-			}*/
 		
 		this.murs = shuffle(labyrinthe.tousLesMurs());
 		labyrinthe.fermerTousLesMurs()
