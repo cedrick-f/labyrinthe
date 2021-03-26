@@ -2,7 +2,7 @@ import {Coords, Mur} from "../util/Coords.js";
 import {randomInt, randomChoice, shuffle} from "../util/Random.js";
 
 /**
- * @param {('random'|'fusion'|'prim'|'aldous-broder')} name
+ * @param {('random'|'fusion'|'prim'|'aldous-broder'|'recursive-division')} name
  * @param {Labyrinthe} labyrinthe
  * @return {MazeGenerator}
  */
@@ -14,6 +14,8 @@ export function generatorFromName(name, labyrinthe) {
 			return new FusionGenerator(labyrinthe)
 		case "random":
 			return new RandomGenerator(labyrinthe)
+		case "recursive-division":
+			return new RecursiveDivision(labyrinthe)
 		default:
 			return new MazeGenerator(labyrinthe)
 	}
@@ -162,5 +164,24 @@ class AldousGenerator extends MazeGenerator {
 	 */
 	hasNext() {
 		return this.n > this.visited.size
+	}
+}
+
+class RecursiveDivision extends MazeGenerator {
+
+	constructor(labyrinthe) {
+		let n = 0
+		for (let n of labyrinthe.tousLesMurs) {
+			labyrinthe.ouvrir_passage(n)
+		}
+		
+	}
+
+	next() {
+
+	}
+
+	hasNext() {
+
 	}
 }
