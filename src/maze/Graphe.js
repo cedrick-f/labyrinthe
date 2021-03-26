@@ -3,18 +3,18 @@
  */
 export class Graphe {
 
-    constructor() {
-		this.A = {}        
+    /**
+     * @param {Object.<T, Set<T>>} [a]
+     */
+    constructor(a = {}) {
+		this.A = a
 	}
 
     /**
      * Suppression de toutes les arêtes
      */
      razAretes() {
-        for (let s in this.A) {
-            this.A[s] = new Set()
-        }
-        
+        Object.values(this.A).forEach(set => set.clear())
     }
 
     /**
@@ -73,14 +73,14 @@ export class Graphe {
 	}
     /**
      * @param {T} from
-     * @returns {T{}}
+     * @returns {Object.<T, T>}
      * Renvoie tous les chemins du parcours en largeur
      */
 	parcours_largeur_chemins(from) {
 		if (!(from in this.A)) {
-			return []
+			return {}
 		}
-		let r = {from : undefined}
+		let r = {from: null}
 		let cour = [from]
 		let suiv = []
         while (cour.length) {
@@ -107,10 +107,10 @@ export class Graphe {
 	chemin(x, y) {
         let parcours_largeur_chemins = this.parcours_largeur_chemins(x)
         if (!(y in parcours_largeur_chemins)) {
-            return None
+            return []
 		}
         let r = []
-        for (let onsenfoutdecettevariable in parcours_largeur_chemins) {
+        for (let _ in parcours_largeur_chemins) {
             r.push(y)
             y = parcours_largeur_chemins[y]
             if (y === x) {

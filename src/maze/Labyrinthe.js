@@ -11,7 +11,8 @@ export class Labyrinthe {
 		this.height = height
 		this.graphe = new Graphe()
 		this.creerCellules()
-		this.ouvertures = [] // liste des 2 cellules (forcément latérales) où se situent les ouvertures vers l'extérieur
+		/** @type {[Coords, Coords]} */
+		this.ouvertures = [new Coords(0, 0), new Coords(width - 1, height - 1)] // tuple des 2 cellules (forcément latérales) où se situent les ouvertures vers l'extérieur
 	}
 
 	/**
@@ -24,7 +25,6 @@ export class Labyrinthe {
 				this.graphe.ajouter_sommet(Coords.identifiant(x, y, this))
 			}
 		}
-		
 	}
 
 
@@ -136,11 +136,16 @@ export class Labyrinthe {
 		return l
 	}
 
+	/**
+	 * Cherche le plus long chemin entre deux cellules latérales.
+	 *
+	 * @return {[Coords, Coords]} Entrée et sortie du labyrinthe.
+	 */
 	trouverPlusLongChemin() {
 		let l = this.toutesCellulesLaterales()
 		let compteChemin = 0
 		for (let i = 0; i < l.length; i++) {
-			for (let j = 1; j < l.length; j++) {
+			for (let j = i + 1; j < l.length; j++) {
 				let g = this.graphe.chemin(l[i].identifiant(this), l[j].identifiant(this))
 				if (g.length > compteChemin) {
 					compteChemin = g.length
@@ -164,7 +169,7 @@ export class LabyrintheImage extends Labyrinthe {
 	}
 
 	murEntre(ax, ay, bx, by) {
-		const index = (bx + by * this.imageData.width) * 4
+		const index = (bx + by * this.width) * 4
 		return this.imageData.data[index] < 220 || this.imageData.data[index + 1] < 220 || this.imageData.data[index + 2] < 220
 	}
 }
