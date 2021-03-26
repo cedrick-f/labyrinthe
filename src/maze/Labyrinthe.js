@@ -135,22 +135,19 @@ export class Labyrinthe {
 
 	trouverPlusLongChemin() {
 		let l = toutesCellulesLaterales()
-		let c = 0 //chemin
-		for (i of l.lengh) {
-			for (jesaispasquoimettre ;_;) {
-				let g = Graphe.chemin(x, y)
-				if (g.lengh > c) {
-					c = g.lengh
+		let compteChemin = 0
+		for (let i = 0; i < l.lengh; i++) {
+			for (let j = 1; j < l.lengh; j++) {
+				let g = this.graphe.chemin(l[i], l[j])
+				if (g.lengh > compteChemin) {
+					compteChemin = g.lengh
+					this.ouvertures = [l[i], l[j]]
 				}
 			}
 		}
-		return //tableau de cellules
+		return this.ouvertures
 	}
 
-	/**aller d'un point a à un point b avec le plus court chemin (methode d'axel dans Graphe)
-	 * quel point a, quel point b ? (les plus éloignés possibles)
-	 * utiliser chemin(x, y)
-     */
 }
 
 export class LabyrintheImage extends Labyrinthe {
