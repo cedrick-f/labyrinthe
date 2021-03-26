@@ -112,7 +112,7 @@ export class Graphe {
         let r = []
         for (let onsenfoutdecettevariable in parcours_largeur_chemins) {
             r.push(y)
-            y = paths[y]
+            y = parcours_largeur_chemins[y]
             if (y === x) {
                 r.push(y)
                 r.reverse()
