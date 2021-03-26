@@ -42,7 +42,7 @@ export class GameController {
         const timer = Date.now() - this.start
         const [fx, fy] = this.vue.cellSizes(this.maze)
         this.vue.ctx.textAlign = 'center'
-        this.vue.ctx.fillText(timer.toString(), fx / 2, fy / 2, fx)
+        this.vue.ctx.fillText((timer / 1000).toFixed(2), fx / 2, fy / 2, fx)
         this.vue.highlightCell(this.player, fx, fy, 'green')
         this.vue.highlightCell(this.maze.ouvertures[1], fx, fy, 'red')
         requestAnimationFrame(this.tick)
@@ -60,6 +60,10 @@ export class GameController {
         if (next && !this.maze.murEntre(this.player.x, this.player.y, next.x, next.y)) {
             this.moves++
             this.player = next
+            if (next.equals(this.maze.ouvertures[1])) {
+                alert('Bravo !')
+                this.stop()
+            }
         }
     }
 
