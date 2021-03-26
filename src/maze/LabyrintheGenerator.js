@@ -14,6 +14,8 @@ export function generatorFromName(name, labyrinthe) {
 			return new FusionGenerator(labyrinthe)
 		case "random":
 			return new RandomGenerator(labyrinthe)
+		case "prim":
+			return new PrimGenerator(labyrinthe)
 		default:
 			return new MazeGenerator(labyrinthe)
 	}
@@ -162,5 +164,25 @@ class AldousGenerator extends MazeGenerator {
 	 */
 	hasNext() {
 		return this.n > this.visited.size
+	}
+}
+
+class PrimGenerator extends MazeGenerator {
+
+	constructor(labyrinthe) {
+		super(labyrinthe)
+		this.cellules = [] //toutes les cellules
+		this.cellules = this.cellules.append(this.creerCellules())
+		this.murs = [] //murs autours d'une cellule aléatoire
+		this.murs = this.murs.append(this.graphe.voisinsCellule(randomChoice(cellules)))
+	}
+
+	next() {
+		let h = randomChoice(this.murs)
+		if 
+	}
+
+	hasNext() {
+		return this.murs !== []
 	}
 }
