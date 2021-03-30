@@ -90,7 +90,8 @@ export class Controller {
    */
   onBuildClick(event) {
     window.clearInterval(this.timeoutId)
-    const algorithmRadio = this.container.querySelector('input[name="algorithm"]:checked').id
+    //const algorithmRadio = this.container.querySelector('input[name="algorithm"]:checked').id
+	const algorithmRadio = this.container.querySelector('#algorithm').value
     this.generator = generatorFromName(algorithmRadio, this.maze)
 
     if (this.generator.hasNext()) {

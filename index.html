@@ -24,7 +24,13 @@
                         <label for="height">Hauteur</label>
                     </div>
                     <h4>Algorithme de construction</h4>
-                    <div class="form-group">
+						<select id='algorithm' class="form-group">
+							<option value='random'>Random</option>
+							<option value='fusion'>Fusion</option>
+							<option value='prim'>Prim</option>
+							<option value='aldous-broder'>Aldous-Broder</option>
+						</select>
+                    <!--<div class="form-group">
                         <input type="radio" name="algorithm" id="random" checked />
                         <label for="random">Random</label>
                         <a href="info_random.html" class="button modal-action" title="Plus d'informations">?</a>
@@ -43,11 +49,12 @@
                         <label for="aldous-broder">Aldous-Broder</label>
                         <a href="info_aldous.html" class="button modal-action" title="Plus d'informations">?</a>
                     </div>
+					!-->
                     <button id="build"><i class="fi-xwsuxx-pen"></i> Construire</button>
                     <div class="form-group">
                         <input type="range" min="0" max="200" id="build-speed" class="reverse" /><br />
                         <label for="build-speed">Vitesse de construction</label>
-                    </div>
+                    </div> 
                 </fieldset>
 				<fieldset>
                     <legend>Résolution</legend>
