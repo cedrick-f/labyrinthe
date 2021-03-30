@@ -72,18 +72,18 @@ export class GameController {
      * @return {null|Coords}
      */
     nextPosition(event) {
-        switch (event.key) {
-            case 'Right':
+        switch (event.code) {
             case 'ArrowRight':
+			case 'KeyD':
                 return new Coords(this.player.x + 1, this.player.y)
-            case 'Left':
             case 'ArrowLeft':
+			case 'KeyA':
                 return new Coords(this.player.x - 1, this.player.y)
-            case 'Up':
             case 'ArrowUp':
+			case 'KeyW':
                 return new Coords(this.player.x, this.player.y - 1)
-            case 'Down':
             case 'ArrowDown':
+			case 'KeyS':
                 return new Coords(this.player.x, this.player.y + 1)
             default:
                 return null
