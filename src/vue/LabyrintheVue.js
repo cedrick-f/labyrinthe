@@ -80,6 +80,7 @@ export class LabyrintheVue {
                 }
             }
         }
+		this.highlightOpennings(labyrinthe, fx, fy)
     }
 
     /**
@@ -130,7 +131,19 @@ export class LabyrintheVue {
         const oy = fy * cell.y
         this.ctx.fillRect(ox + 2, oy + 2, fx - 4, fy - 4)
     }
-
+	
+	/**
+	 * Met en valeur l'entrée et la sortie
+	 * 
+	 * @param {Labyrinthe} labyrinthe
+	 * @param {number} fx Largeur d'une seule cellule.
+     * @param {number} fy Hauteur d'une seule cellule.
+	 */
+	highlightOpennings(labyrinthe, fx, fy) {
+		this.highlightCell(labyrinthe.ouvertures[0], fx, fy, 'green')
+        this.highlightCell(labyrinthe.ouvertures[1], fx, fy, 'red')
+	}
+	
     /**
      * Retourne la liste des cellules non visitées à partir de celles visitées.
      *
