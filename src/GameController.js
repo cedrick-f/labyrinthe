@@ -66,7 +66,7 @@ export class GameController {
                 alert('Bravo !')
                 this.stop()
             } else if (!this.maze.murEntre(this.player.x, this.player.y, next.x, next.y)) {
-                this.direction = Math.atan2(this.player.y - next.y, this.player.x - next.x) * 180 / Math.PI + 180
+                this.direction = Math.atan2(next.y - this.player.y, next.x - this.player.x) * 180 / Math.PI
                 this.moves++
                 this.player = next
             }
