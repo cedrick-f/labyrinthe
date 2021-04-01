@@ -291,6 +291,23 @@ export class LabyrintheVue {
         this.ctx.stroke()
     }
 
+    /**
+     * @param {CanvasImageSource} image
+     * @param {number} x
+     * @param {number} y
+     * @param {number} angle
+     * @param {number} [width]
+     * @param {number} [height]
+     */
+    drawImageWithRotation(image, x, y, angle, width, height) {
+        this.ctx.save()
+        this.ctx.translate(x + width / 2, y + height / 2)
+        this.ctx.rotate(angle)
+        this.ctx.translate(- x - width / 2, - y - height / 2)
+        this.ctx.drawImage(image, x, y, width, height)
+        this.ctx.restore()
+    }
+
     clear() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     }

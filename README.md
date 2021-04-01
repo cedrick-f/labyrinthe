@@ -12,3 +12,7 @@ Vous pouvez aussi utiliser [Vite](https://github.com/vitejs/vite) pour créer un
 yarn
 yarn dev
 ```
+
+## Crédits
+
+[Image poisson](https://pixabay.com/fr/illustrations/clipart-poissons-mer-l-eau-nager-3418189)

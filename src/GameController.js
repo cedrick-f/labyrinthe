@@ -15,6 +15,9 @@ export class GameController {
         this.moves = 0
         this.start = Date.now()
         this.continue = true
+        this.image = new Image()
+        this.image.src = '/public/fish.png'
+        this.direction = 0 // Rotation du personnage, en degré
 
         this.tick = this.tick.bind(this)
         this.onKeyDown = this.onKeyDown.bind(this)
@@ -24,7 +27,7 @@ export class GameController {
         document.addEventListener('keydown', this.onKeyDown, false)
         document.addEventListener('keyup', this.onKeyUp, false)
 
-        this.tick()
+        this.image.onload = this.tick
     }
 
     stop() {
@@ -44,7 +47,8 @@ export class GameController {
         this.vue.ctx.textAlign = 'center'
         const start = this.maze.ouvertures[0]
         this.vue.ctx.fillText((timer / 1000).toFixed(2), start.x * fx + fx / 2, start.y * fy + fy / 2, fx)
-        this.vue.highlightCell(this.player, fx, fy, 'green')
+        //this.vue.highlightCell(this.player, fx, fy, 'green')
+        this.vue.drawImageWithRotation(this.image, fx * this.player.x, fy * this.player.y, this.direction, fx, fy)
         requestAnimationFrame(this.tick)
     }
 
@@ -62,6 +66,7 @@ export class GameController {
                 alert('Bravo !')
                 this.stop()
             } else if (!this.maze.murEntre(this.player.x, this.player.y, next.x, next.y)) {
+                this.direction = Math.atan2(this.player.y - next.y, this.player.x - next.x) * 180 / Math.PI + 180
                 this.moves++
                 this.player = next
             }
