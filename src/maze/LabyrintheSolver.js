@@ -2,7 +2,7 @@ import {Coords} from '../util/Coords.js'
 import {manhattanDistance} from '../util/Distance.js'
 
 /**
- * @param {('astar')} name
+ * @param {('astar'|'breath-first-search')} name
  * @param {Labyrinthe} labyrinthe
  * @return {MazeSolver}
  */
@@ -22,8 +22,8 @@ class MazeSolver {
      */
     constructor(labyrinthe) {
         this.labyrinthe = labyrinthe
-        this.start = labyrinthe.ouvertures[0] || new Coords(0, 0)
-        this.goal = labyrinthe.ouvertures[1] || new Coords(labyrinthe.width - 1, labyrinthe.height - 1)
+        this.start = labyrinthe.ouvertures[0]
+        this.goal = labyrinthe.ouvertures[1]
         this.startId = this.start.identifiant(labyrinthe)
         this.goalId = this.goal.identifiant(labyrinthe)
         /** @type {Coords[]} */
@@ -131,6 +131,44 @@ class AStarSolver extends MazeSolver {
 
     hasNext() {
         return this.openSet.size > 0 && this.path.length === 0
+    }
+}
+
+class BreathFirstSearchSolver extends MazeSolver {
+
+    /**
+     * @param {Labyrinthe} labyrinthe
+     */
+    constructor(labyrinthe) {
+        super(labyrinthe)
+        /** @type {number[][]} */
+        this.queue = [[this.startId]]
+        /** @type {Set<number>} */
+        this.visited = new Set([this.startId])
+    }
+
+    /**
+     * @return {VueParameters}
+     */
+    next() {
+        const path = this.queue.shift()
+        const node = path[path.length - 1]
+        if (node === this.goalId) {
+            this.path = path.map(id => Coords.fromIdentifiant(id, this.labyrinthe))
+            return {}
+        }
+
+        for (const cell of this.labyrinthe.graphe.voisins(node)) {
+            if (!this.visited.has(cell)) {
+                this.queue.push([...path, cell])
+                this.visited.add(cell)
+            }
+        }
+        return { current: Coords.fromIdentifiant(node, this.labyrinthe) }
+    }
+
+    hasNext() {
+        return this.queue.length > 0
     }
 }
 
