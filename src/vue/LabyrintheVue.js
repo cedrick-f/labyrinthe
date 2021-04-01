@@ -31,10 +31,16 @@ export class LabyrintheVue {
         this.ctx.strokeRect(1, 1, this.canvas.width - 2, this.canvas.height - 2)
 
         const [fx, fy] = this.cellSizes(labyrinthe)
-        for (let x = 0; x < labyrinthe.width; x++) {
-            for (let y = 0; y < labyrinthe.height; y++) {
-                this.drawCell(x, y, fx, fy, labyrinthe)
+        if (labyrinthe instanceof LabyrintheImage) {
+            this.ctx.putImageData(labyrinthe.imageData, 0, 0)
+        } else {
+            for (let x = 0; x < labyrinthe.width; x++) {
+                for (let y = 0; y < labyrinthe.height; y++) {
+                    this.drawCell(x, y, fx, fy, labyrinthe)
+                }
             }
+            this.drawOutsideWall(labyrinthe, labyrinthe.ouvertures[0], fx, fy)
+            this.drawOutsideWall(labyrinthe, labyrinthe.ouvertures[1], fx, fy)
         }
 
         const visited = properties.visited
@@ -64,11 +70,13 @@ export class LabyrintheVue {
                     this.lastWalls.shift()
                 }
             }
+        } else {
+            this.lastWalls = []
         }
 
         if (properties.grille) {
             this.ctx.textAlign = 'center'
-            this.ctx.font = '16px sans-serif'
+            this.ctx.font = '12px sans-serif'
             const midFx = fx / 2
             const midFy = fy / 2
             for (let x = 0; x < labyrinthe.width; x++) {
@@ -80,7 +88,6 @@ export class LabyrintheVue {
                 }
             }
         }
-		this.highlightOpennings(labyrinthe, fx, fy)
     }
 
     /**
@@ -185,6 +192,29 @@ export class LabyrintheVue {
         const [fx, fy] = this.cellSizes(labyrinthe)
         this.drawLine(fx * wall.a.x, fy * wall.a.y, fx * wall.b.x, fy * wall.b.y)
         this.ctx.stroke()
+    }
+
+    /**
+     * @param {Labyrinthe} labyrinthe
+     * @param {Coords} cell
+     * @param {number} fx
+     * @param {number} fy
+     * @param {string} [style]
+     */
+    drawOutsideWall(labyrinthe, cell, fx, fy, style) {
+        if (style) {
+            this.ctx.strokeStyle = style
+        }
+        const draw = (style ? this.ctx.strokeRect : this.ctx.clearRect).bind(this.ctx)
+        if (cell.y === 0) {
+            draw(cell.x * fx, 0, fx, 2)
+        } else if (cell.y === labyrinthe.height - 1) {
+            draw(cell.x * fx, this.canvas.height - 2, fx, 2)
+        } else if (cell.x === 0) {
+            draw(0, cell.y * fy, 2, fy)
+        } else if (cell.x === labyrinthe.width - 1) {
+            draw(this.canvas.width - 2, cell.y * fy, 2, fy)
+        }
     }
 
     /**

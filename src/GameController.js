@@ -42,9 +42,9 @@ export class GameController {
         const timer = Date.now() - this.start
         const [fx, fy] = this.vue.cellSizes(this.maze)
         this.vue.ctx.textAlign = 'center'
-        this.vue.ctx.fillText((timer / 1000).toFixed(2), fx / 2, fy / 2, fx)
+        const start = this.maze.ouvertures[0]
+        this.vue.ctx.fillText((timer / 1000).toFixed(2), start.x * fx + fx / 2, start.y * fy + fy / 2, fx)
         this.vue.highlightCell(this.player, fx, fy, 'green')
-        this.vue.highlightCell(this.maze.ouvertures[1], fx, fy, 'red')
         requestAnimationFrame(this.tick)
     }
 
@@ -57,12 +57,13 @@ export class GameController {
             return
         }
         const next = this.nextPosition(event)
-        if (next && !this.maze.murEntre(this.player.x, this.player.y, next.x, next.y)) {
-            this.moves++
-            this.player = next
-            if (next.equals(this.maze.ouvertures[1])) {
+        if (next) {
+            if (this.player.equals(this.maze.ouvertures[1]) && (next.x < 0 || next.y < 0 || next.x >= this.maze.width || next.y >= this.maze.height)) {
                 alert('Bravo !')
                 this.stop()
+            } else if (!this.maze.murEntre(this.player.x, this.player.y, next.x, next.y)) {
+                this.moves++
+                this.player = next
             }
         }
     }

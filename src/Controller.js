@@ -27,6 +27,10 @@ export class Controller {
     const solveSpeedInput = container.querySelector('#solve-speed')
     /** @type {HTMLInputElement} */
     const imgInput = container.querySelector('#img-input')
+    /** @type {HTMLInputElement} */
+    this.solveButton = container.querySelector('#solve')
+    /** @type {HTMLInputElement} */
+    this.playButton = container.querySelector('#play')
 
     this.maze = new Labyrinthe(parseInt(widthInput.value), parseInt(heightInput.value))
     this.vue = new LabyrintheVue(container.querySelector('canvas'))
@@ -35,8 +39,9 @@ export class Controller {
       element.addEventListener('input', this.onDimensionsChange)
     }
     container.querySelector('#build').addEventListener('click', this.onBuildClick.bind(this))
-    container.querySelector('#solve').addEventListener('click', this.onSolveClick.bind(this))
-    container.querySelector('#play').addEventListener('click', this.onPlayClick.bind(this))
+    this.solveButton.addEventListener('click', this.onSolveClick.bind(this))
+    this.solveButton.disabled = true
+    this.playButton.addEventListener('click', this.onPlayClick.bind(this))
     this.generateTimeout = parseInt(buildSpeedInput.value)
     buildSpeedInput.addEventListener('input', this.onSpeedChange)
     this.solveTimeout = parseInt(solveSpeedInput.value)
@@ -48,6 +53,8 @@ export class Controller {
     this.generator = null
     /** @type {null|MazeSolver} */
     this.solver = null
+    /** @type {null|GameController} */
+    this.game = null
 
     window.addEventListener('resize', this.onResize)
     this.onResize()
@@ -89,6 +96,10 @@ export class Controller {
    * @param {MouseEvent} event
    */
   onBuildClick(event) {
+    if (this.game) {
+      this.game.stop()
+      this.game = null
+    }
     window.clearInterval(this.timeoutId)
     //const algorithmRadio = this.container.querySelector('input[name="algorithm"]:checked').id
 	const algorithmRadio = this.container.querySelector('#algorithm').value
@@ -96,6 +107,10 @@ export class Controller {
 
     if (this.generator.hasNext()) {
       this.onGeneratorStep()
+      if (this.generateTimeout) {
+        this.solveButton.disabled = true
+        this.playButton.disabled = true
+      }
     }
   }
 
@@ -105,6 +120,10 @@ export class Controller {
    * @param {MouseEvent} event
    */
   onSolveClick(event) {
+    if (this.game) {
+      this.game.stop()
+      this.game = null
+    }
     window.clearInterval(this.timeoutId)
     this.solver = solverByName('astar', this.maze)
     if (this.solver.hasNext()) {
@@ -118,32 +137,39 @@ export class Controller {
    * @param {MouseEvent} event
    */
    onPlayClick(event) {
-    new GameController(this.container, this.maze, this.vue)
-  }
+     if (this.game) {
+       this.game.stop()
+     }
+     this.game = new GameController(this.container, this.maze, this.vue)
+   }
 
   /**
    * 
    */
   onGeneratorStep() {
     const value = this.generator.next()
-    if (value !== false && this.generateTimeout) {
-      this.vue.clear()
-      this.vue.draw(this.maze, value)
-    }
     if (this.generateTimeout) {
+      this.vue.clear()
       if (this.generator.hasNext()) {
+        this.vue.draw(this.maze, value)
         this.timeoutId = window.setTimeout(this.onGeneratorStep, this.generateTimeout)
       } else {
-        this.maze.trouverPlusLongChemin()
+        this.onGeneratorEnd()
       }
     } else {
       while (this.generator.hasNext()) {
         this.generator.next()
       }
-      this.maze.trouverPlusLongChemin()
-      this.vue.clear()
-      this.vue.draw(this.maze)
+      this.onGeneratorEnd()
     }
+  }
+
+  onGeneratorEnd() {
+    this.maze.trouverPlusLongChemin()
+    this.vue.clear()
+    this.vue.draw(this.maze)
+    this.solveButton.disabled = false
+    this.playButton.disabled = false
   }
 
   onSolverStep() {
