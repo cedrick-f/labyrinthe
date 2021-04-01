@@ -6,12 +6,17 @@ const cache = {}
 /**
  * Affiche la boîte modale.
  *
- * @param {Event} event
+ * @param {Event|string} event
  * @param {HTMLElement} modal Conteneur global
  */
-async function openModal(event, modal) {
-    event.preventDefault()
-    const target = event.target.getAttribute('href')
+export async function openModal(event, modal) {
+    let target
+    if (typeof event === 'string') {
+        target = event
+    } else {
+        event.preventDefault()
+        target = event.target.getAttribute('href')
+    }
     modal.lastElementChild.lastElementChild.innerHTML = await loadModal(target)
     modal.setAttribute('aria-modal', 'true')
     modal.removeAttribute('hidden')
