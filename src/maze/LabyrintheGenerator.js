@@ -57,6 +57,9 @@ class MazeGenerator {
 	}
 }
 
+/**
+ * Algorithme de fusion aléatoire
+ */
 class FusionGenerator extends MazeGenerator {
 
 	/**
@@ -134,6 +137,9 @@ class RandomGenerator extends MazeGenerator {
 	}
 }
 
+/**
+ * Algorithme d'Aldous-Broder
+ */
 class AldousGenerator extends MazeGenerator {
 
 	/**
@@ -167,6 +173,9 @@ class AldousGenerator extends MazeGenerator {
 	}
 }
 
+/**
+ * 
+ */
 class PrimGenerator extends MazeGenerator {
 
 	constructor(labyrinthe) {
@@ -186,6 +195,9 @@ class PrimGenerator extends MazeGenerator {
 	}
 }
 
+/**
+ * 
+ */
 class RecursiveDivision extends MazeGenerator {
 
 	constructor(labyrinthe) {
