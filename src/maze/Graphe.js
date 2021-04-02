@@ -24,6 +24,64 @@ export class Graphe {
         this.A = {}
     }
 
+    /**
+     * Retourne la liste des sommets, ordonnés selon leur degré dans l'ordre croissant.
+     *
+     * @returns {T[]}
+     */
+    sommets() {
+        const byDegree = {}
+        for (const [sommet, voisins] of Object.entries(this.A)) {
+            if (!(voisins.size in byDegree)) {
+                byDegree[voisins.size] = new Set()
+            }
+            byDegree[voisins.size].add(sommet)
+        }
+
+        const list = []
+        for (const d of Object.keys(byDegree).sort()) {
+            for (const el of byDegree[d]) {
+                list.push(isNaN(el) ? el : parseInt(el))
+            }
+        }
+        return list
+    }
+
+    /**
+     * Attribue un identifiant de couleur à chaque sommet, avec des couleurs différentes lorsque les deux sommets sont reliés.
+     *
+     * @return {Object.<T, number>}
+     */
+    colorer() {
+        const keys = Object.keys(this.A)
+        if (keys.length < 1) {
+            return {}
+        }
+
+        const colors = { [keys[0]]: 0 }
+
+        // Définit les couleurs disponibles
+        let available = new Array(keys.length)
+        available = available.fill(true);
+
+        for (let i = 1; i < keys.length; i++) {
+            // Pour chaque voisin, la couleur est définie comme indisponible
+            for (const neighbor of this.A[keys[i]]) {
+                const color = colors[neighbor]
+                if (typeof color === 'number') {
+                    available[color] = false;
+                }
+            }
+
+            // Assigne la première couleur disponible
+            colors[i] = available.findIndex(color => color)
+
+            // Réinitialise le tableau
+            available = available.fill(true);
+        }
+
+        return colors
+    }
 
     /**
      * @param {T} sommet

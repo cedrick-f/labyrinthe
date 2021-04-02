@@ -1,5 +1,7 @@
 import {Coords, Mur} from "../util/Coords.js";
 import {LabyrintheImage} from "../maze/Labyrinthe.js";
+import {linearInterpolation} from "../util/Distance.js";
+import {ceilDivisionByTwo} from "../util/FastMath.js";
 
 /**
  * @typedef VueParameters
@@ -8,6 +10,8 @@ import {LabyrintheImage} from "../maze/Labyrinthe.js";
  * @property {Iterable.<Coords|number>} [visited] Un itérable avec les coordonnées/identifiants des cellules déjà visitées.
  * @property {number[]} [grille] Pour chaque identifiant, associe une valeur à afficher à la case.
  */
+
+const DRAW_COLORED_GRAPH = false
 
 export class LabyrintheVue {
 
@@ -86,6 +90,21 @@ export class LabyrintheVue {
                         this.ctx.fillText(value.toString(), x * fx + midFx, y * fy + midFy, fx)
                     }
                 }
+            }
+        }
+
+        if (DRAW_COLORED_GRAPH) {
+            const colors = labyrinthe.graphe.colorer()
+            const n = new Set(Object.values(colors)).size
+            const mid = ceilDivisionByTwo(n)
+            const gradiant = linearInterpolation(100, 255, mid)
+                .map(color => parseInt(color).toString(16).padStart(2, '0'))
+
+            for (const cellId in colors) {
+                const colorId = colors[cellId]
+                const red = colorId < mid ? gradiant[colorId] : '00'
+                const green = colorId > mid ? gradiant[mid - colorId] : '00'
+                this.highlightCell(Coords.fromIdentifiant(cellId, labyrinthe), fx, fy, `#${red}20${green}`)
             }
         }
     }
