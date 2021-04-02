@@ -3,7 +3,7 @@ import {LabyrintheVue} from './vue/LabyrintheVue.js';
 import {generatorFromName} from './maze/LabyrintheGenerator.js';
 import {solverByName} from './maze/LabyrintheSolver.js';
 import {GameController} from './GameController.js';
-import {openModal} from "./vue/modal";
+import {openModal} from "./vue/modal.js";
 
 export class Controller {
   /**
