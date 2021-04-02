@@ -3,6 +3,7 @@ import {LabyrintheVue} from './vue/LabyrintheVue.js';
 import {generatorFromName} from './maze/LabyrintheGenerator.js';
 import {solverByName} from './maze/LabyrintheSolver.js';
 import {GameController} from './GameController.js';
+import {openModal} from "./vue/modal";
 
 export class Controller {
   /**
@@ -31,6 +32,10 @@ export class Controller {
     this.solveButton = container.querySelector('#solve')
     /** @type {HTMLInputElement} */
     this.playButton = container.querySelector('#play')
+    /** @type {HTMLSelectElement} */
+    this.buildAlgorithmSelect = container.querySelector('#algorithm')
+
+    container.querySelector('#info-build').addEventListener('click', this.onBuildInfoClick.bind(this))
 
     this.maze = new Labyrinthe(parseInt(widthInput.value), parseInt(heightInput.value))
     this.vue = new LabyrintheVue(container.querySelector('canvas'))
@@ -101,9 +106,7 @@ export class Controller {
       this.game = null
     }
     window.clearInterval(this.timeoutId)
-    //const algorithmRadio = this.container.querySelector('input[name="algorithm"]:checked').id
-	const algorithmRadio = this.container.querySelector('#algorithm').value
-    this.generator = generatorFromName(algorithmRadio, this.maze)
+    this.generator = generatorFromName(this.buildAlgorithmSelect.value, this.maze)
 
     if (this.generator.hasNext()) {
       this.onGeneratorStep()
@@ -129,6 +132,15 @@ export class Controller {
     if (this.solver.hasNext()) {
       this.onSolverStep()
     }
+  }
+
+  /**
+   * Lorsqu'on clique pour plus d'informations sur l'algorithme.
+   *
+   * @param {MouseEvent} event
+   */
+  onBuildInfoClick(event) {
+    openModal(`info_${this.buildAlgorithmSelect.value}.html`, document.querySelector('#modal-container'))
   }
 
   /**
