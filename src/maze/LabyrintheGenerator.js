@@ -180,15 +180,20 @@ class PrimGenerator extends MazeGenerator {
 
 	constructor(labyrinthe) {
 		super(labyrinthe)
-		this.cellules = [] //toutes les cellules nonvisitées
-		this.cellules = this.cellules.push(labyrinthe.creerCellules())
-		this.murs = [] //murs autours d'une cellule aléatoire
-		this.murs = this.murs.push(this.labyrinthe.voisinsCellule(randomChoice(this.cellules)))
+        this.cellules = labyrinthe.toutesCellulesLaterales() //toutes les cellules
+        const start = randomChoice(this.cellules)
+        this.murs = labyrinthe.mursCellule(start.x, start.y) //murs autours d'une cellule aléatoire
 	}
 
 	next() {
 		let r = randomChoice(this.murs)
 		console.log(r)
+		if (this.cellules.some(cell => cell.equals(r[0])) 
+			|| this.cellules.some(cell => cell.equals(r[1]))) {
+			let m = 'kouwkouw'
+			console.log(m)
+		}
+
 		this.murs = []
 
 	}
