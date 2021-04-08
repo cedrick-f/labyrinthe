@@ -2,7 +2,7 @@ import {Coords, Mur} from "../util/Coords.js";
 import {randomInt, randomChoice, shuffle} from "../util/Random.js";
 
 /**
- * @param {('random'|'fusion'|'prim'|'aldous-broder'|'recursive-division')} name
+ * @param {('random'|'fusion'|'prim'|'aldous-broder'|'recursive-backtracker'|'recursive-division')} name
  * @param {Labyrinthe} labyrinthe
  * @return {MazeGenerator}
  */
@@ -12,10 +12,10 @@ export function generatorFromName(name, labyrinthe) {
 			return new AldousGenerator(labyrinthe)
 		case "fusion":
 			return new FusionGenerator(labyrinthe)
-		case "random":
-			return new RandomGenerator(labyrinthe)
+		case "recursive-backtracker":
+			return new GrowingTreeGenerator(labyrinthe, false)
 		case "prim":
-			return new PrimGenerator(labyrinthe)
+			return new GrowingTreeGenerator(labyrinthe, true)
 		case "recursive-division":
 			return new RecursiveDivision(labyrinthe)
 		default:
@@ -57,6 +57,50 @@ class MazeGenerator {
 	}
 }
 
+class GrowingTreeGenerator extends MazeGenerator {
+	/**
+	 * @param {Labyrinthe} labyrinthe
+	 * @param {boolean} chooseRandom Si vrai, = algorithme Prim, sinon = recursive backtracking
+	 */
+	constructor(labyrinthe, chooseRandom) {
+		super(labyrinthe)
+		/** @type {Coords[]} */
+		this.cells = [new Coords(randomInt(labyrinthe.width), randomInt(labyrinthe.height))]
+		/** @type {Set<number>} */
+		this.visited = new Set([this.cells[0].identifiant(labyrinthe)])
+		this.chooseRandom = chooseRandom
+	}
+
+	/**
+	 * @returns {VueParameters}
+	 */
+	next() {
+		const cellIndex = this.chooseRandom ? randomInt(this.cells.length) : this.cells.length - 1
+		const cell = this.cells[cellIndex]
+
+		const neighbors = this.labyrinthe.voisinsCellule(cell.x, cell.y)
+			.filter(neighbor => !this.visited.has(neighbor.identifiant(this.labyrinthe)))
+		if (neighbors.length) {
+			const neighbor = randomChoice(neighbors)
+			this.labyrinthe.ouvrir_passage(cell, neighbor)
+			this.cells.push(neighbor)
+			this.visited.add(neighbor.identifiant(this.labyrinthe))
+		} else {
+			if (this.chooseRandom) {
+				this.cells.splice(cellIndex, 1)
+			} else {
+				this.cells.pop()
+			}
+		}
+
+		return { current: cell, visited: this.visited }
+	}
+
+	hasNext() {
+		return this.cells.length > 0
+	}
+}
+
 /**
  * Algorithme de fusion aléatoire
  */
@@ -75,14 +119,13 @@ class FusionGenerator extends MazeGenerator {
 		}
 		
 		this.murs = shuffle(labyrinthe.tousLesMurs());
-		labyrinthe.fermerTousLesMurs()
 	}
 
 	/**
 	 * @returns {VueParameters}
 	 */
 	next() {
-		var mur = this.murs[0];
+		const mur = this.murs[0];
 		let a = mur.a.identifiant(this.labyrinthe)
 		let b = mur.b.identifiant(this.labyrinthe)
 		if (this.grille[a] !== this.grille[b]) {
@@ -178,6 +221,9 @@ class AldousGenerator extends MazeGenerator {
  */
 class PrimGenerator extends MazeGenerator {
 
+	/**
+	 * @param {Labyrinthe} labyrinthe
+	 */
 	constructor(labyrinthe) {
 		super(labyrinthe)
         this.cellules = labyrinthe.toutesCellulesLaterales() //toutes les cellules
@@ -185,6 +231,9 @@ class PrimGenerator extends MazeGenerator {
         this.murs = labyrinthe.mursCellule(start.x, start.y) //murs autours d'une cellule aléatoire
 	}
 
+	/**
+	 * @returns {VueParameters}
+	 */
 	next() {
 		let r = randomChoice(this.murs)
 		console.log(r)
@@ -198,6 +247,9 @@ class PrimGenerator extends MazeGenerator {
 
 	}
 
+	/**
+	 * @return {boolean}
+	 */
 	hasNext() {
 		return this.murs.length !== 0
 	}
@@ -209,9 +261,9 @@ class PrimGenerator extends MazeGenerator {
 class RecursiveDivision extends MazeGenerator {
 
 	constructor(labyrinthe) {
-		let n = 0
-		for (let n of labyrinthe.tousLesMurs) {
-			labyrinthe.ouvrir_passage(n)
+		super(labyrinthe)
+		for (const mur of labyrinthe.tousLesMurs()) {
+			labyrinthe.ouvrir_passage(mur.a, mur.b)
 		}
 		
 	}
