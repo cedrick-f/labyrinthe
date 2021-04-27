@@ -130,6 +130,10 @@ export class Controller {
       this.game = null
     }
     window.clearInterval(this.timeoutId)
+    if (this.solver) {
+      this.vue.clear()
+      this.vue.draw(this.maze)
+    }
     this.solver = solverByName(this.solveAlgorithmSelect.value, this.maze)
     if (this.solver.hasNext()) {
       this.onSolverStep()
