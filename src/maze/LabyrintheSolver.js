@@ -12,6 +12,8 @@ export function solverByName(name, labyrinthe) {
             return new BreathFirstSearchSolver(labyrinthe)
         case 'astar':
             return new AStarSolver(labyrinthe)
+        case 'parcours-largeur':
+            return new ParcoursLargeurSolver(labyrinthe)
     }
 }
 
@@ -174,6 +176,38 @@ class BreathFirstSearchSolver extends MazeSolver {
 
     hasNext() {
         return this.queue.length > 0
+    }
+}
+
+class ParcoursLargeurSolver extends MazeSolver {
+
+    /**
+     * @param {Labyrinthe} labyrinthe
+     * @param {T} from
+     */
+
+    constructor(from) {
+        let r = {from: null}
+		let cour = [from]
+		let suiv = []
+    }
+
+    next() {
+        let s = cour.shift()
+		for (let v of this.voisins(s)) {
+			if (!(v in r)){
+                suiv.push(v)
+                 r[v] = s
+			}
+		}
+		if (!cour.length) {
+			cour = suiv
+			suiv = []
+		}
+    }
+
+    hasNext() {
+        return cour.length
     }
 }
 
