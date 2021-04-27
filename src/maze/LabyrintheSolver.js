@@ -7,7 +7,12 @@ import {manhattanDistance} from '../util/Distance.js'
  * @return {MazeSolver}
  */
 export function solverByName(name, labyrinthe) {
-    return new AStarSolver(labyrinthe)
+    switch (name) {
+        case 'breath-first-search':
+            return new BreathFirstSearchSolver(labyrinthe)
+        case 'astar':
+            return new AStarSolver(labyrinthe)
+    }
 }
 
 /**

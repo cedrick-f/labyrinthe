@@ -24,7 +24,7 @@
                         <label for="height">Hauteur</label>
                     </div>
                     <h4>Algorithme de construction</h4>
-						<select id='algorithm' class="form-group">
+						<select id="build-algorithm" class="form-group">
 							<option value='random' selected>Random</option>
 							<option value='fusion'>Fusion</option>
 							<option value='prim'>Prim</option>
@@ -62,6 +62,10 @@
 				<fieldset>
                     <legend>Résolution</legend>
                     <button id="play"><i class="fi-xwluxl-gamepad-wide"></i> Jouer !</button>
+                    <select id="solve-algorithm" class="form-group">
+                        <option value="astar" selected>A*</option>
+                        <option value="breath-first-search">Fusion</option>
+                    </select>
                     <button id="solve">Résoudre automatiquement</button>
                     <div class="form-group">
                         <input type="range" min="0" max="100" id="solve-speed" class="reverse" /><br />

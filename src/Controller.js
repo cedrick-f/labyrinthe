@@ -33,7 +33,9 @@ export class Controller {
     /** @type {HTMLInputElement} */
     this.playButton = container.querySelector('#play')
     /** @type {HTMLSelectElement} */
-    this.buildAlgorithmSelect = container.querySelector('#algorithm')
+    this.buildAlgorithmSelect = container.querySelector('#build-algorithm')
+    /** @type {HTMLSelectElement} */
+    this.solveAlgorithmSelect = container.querySelector('#solve-algorithm')
 
     container.querySelector('#info-build').addEventListener('click', this.onBuildInfoClick.bind(this))
 
@@ -128,7 +130,7 @@ export class Controller {
       this.game = null
     }
     window.clearInterval(this.timeoutId)
-    this.solver = solverByName('astar', this.maze)
+    this.solver = solverByName(this.solveAlgorithmSelect.value, this.maze)
     if (this.solver.hasNext()) {
       this.onSolverStep()
     }
