@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Priority test</title>
+</head>
+<body>
+    <script type="module">
+        import {MinHeap} from './MinHeap.js';
+        import {tests, assertEquals} from "../tests/TestLib.js";
+        tests({
+            'queue()': function() {
+                const queue = new MinHeap()
+                queue.queue('a', 5)
+                queue.queue('b', 9)
+                queue.queue('c', 10)
+                assertEquals('a', queue.poll())
+                assertEquals('b', queue.poll())
+                assertEquals('c', queue.poll())
+            },
+            'empty()': function() {
+                const queue = new MinHeap()
+                queue.queue('a', 5)
+                queue.queue('b', 2)
+                assertEquals(false, queue.empty())
+                queue.poll()
+                assertEquals(false, queue.empty())
+                queue.poll()
+                assertEquals(true, queue.empty())
+            }
+        })
+    </script>
+</body>
+</html>

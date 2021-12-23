@@ -1,5 +1,6 @@
 import {Coords} from '../util/Coords.js'
 import {manhattanDistance} from '../util/Distance.js'
+import {MinHeap} from "./MinHeap";
 
 /**
  * @param {('astar'|'breath-first-search')} name
@@ -68,8 +69,11 @@ class AStarSolver extends MazeSolver {
     constructor(labyrinthe, distance = manhattanDistance, costEstimate = manhattanDistance) {
         super(labyrinthe)
 
-        /** @type {Set<number>} */
-        this.openSet = new Set([this.startId])
+        const cost = costEstimate(this.start, this.goal)
+
+        /** @type {MinHeap<number>} */
+        this.toSee = new MinHeap()
+        this.toSee.queue(this.startId, cost)
 
         /** @type {Set<number>} */
         this.closedSet = new Set()
@@ -81,7 +85,7 @@ class AStarSolver extends MazeSolver {
         this.gScore = { [this.startId]: 0 }
 
         /** @type {Object.<number, number>} */
-        this.fScore = { [this.startId]: costEstimate(this.start, this.goal) }
+        this.fScore = { [this.startId]: cost }
 
         this.distance = distance
         this.costEstimate = costEstimate
@@ -91,16 +95,8 @@ class AStarSolver extends MazeSolver {
      * @return {VueParameters}
      */
     next() {
-        // Recherche du noeud avec le plus faible fScore
-        let current = -1
-        let lowestScore = Number.MAX_VALUE
-        for (const nodeId of this.openSet) {
-            const score = this.fScore[nodeId]
-            if (score < lowestScore) {
-                current = nodeId
-                lowestScore = score
-            }
-        }
+        // Recherche du nœud avec le plus faible fScore
+        let current = this.toSee.poll();
 
         // Chemin trouvé !
         if (current === this.goalId) {
@@ -108,7 +104,6 @@ class AStarSolver extends MazeSolver {
             return {}
         }
 
-        this.openSet.delete(current)
         this.closedSet.add(current)
         const currentNode = Coords.fromIdentifiant(current, this.labyrinthe)
 
@@ -120,9 +115,10 @@ class AStarSolver extends MazeSolver {
             if (this.labyrinthe.murEntre(currentNode.x, currentNode.y, neighbor.x, neighbor.y)) {
                 continue
             }
-            this.openSet.add(neighborId)
 
             const tentativeGScore = this.gScore[current] + this.distance(currentNode, neighbor)
+            const score = tentativeGScore + this.costEstimate(neighbor, this.goal)
+            this.toSee.queue(neighborId, score)
             if (tentativeGScore >= getScore(this.gScore, neighborId)) {
                 continue // Ce chemin est plus long.
             }
@@ -130,14 +126,14 @@ class AStarSolver extends MazeSolver {
             // Ce chemin est le plus court parmi les précédents.
             this.cameFrom[neighborId] = current
             this.gScore[neighborId] = tentativeGScore
-            this.fScore[neighborId] = tentativeGScore + this.costEstimate(neighbor, this.goal)
+            this.fScore[neighborId] = score
         }
 
         return { current: currentNode }
     }
 
     hasNext() {
-        return this.openSet.size > 0 && this.path.length === 0
+        return !this.toSee.empty() && this.path.length === 0
     }
 }
 
