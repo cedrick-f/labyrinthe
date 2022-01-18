@@ -27,6 +27,43 @@
                 assertEquals(false, queue.empty())
                 queue.poll()
                 assertEquals(true, queue.empty())
+            },
+            'order': function() {
+                const queue = new MinHeap()
+                queue.queue('a', 4)
+                queue.queue('b', 5)
+                queue.queue('c', 3)
+                assertEquals('c', queue.poll())
+                assertEquals('a', queue.poll())
+                queue.queue('d', 8)
+                queue.queue('e', 1)
+                assertEquals('e', queue.poll())
+                assertEquals('b', queue.poll())
+                assertEquals('d', queue.poll())
+            },
+            'multiple': function() {
+                const queue = new MinHeap()
+                queue.queue('a', 8)
+                queue.queue('b', 2)
+                queue.queue('c', 9)
+
+                assertEquals('b', queue.poll())
+                assertEquals('a', queue.poll())
+                assertEquals('c', queue.poll())
+
+                queue.queue('a', 5)
+                queue.queue('b', 6)
+                queue.queue('c', 1)
+                assertEquals('c', queue.poll())
+                assertEquals('a', queue.poll())
+                assertEquals('b', queue.poll())
+
+                queue.queue('a', 4)
+                queue.queue('b', 2)
+                queue.queue('c', 3)
+                assertEquals('b', queue.poll())
+                assertEquals('c', queue.poll())
+                assertEquals('a', queue.poll())
             }
         })
     </script>
