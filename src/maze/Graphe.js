@@ -107,6 +107,11 @@ export class Graphe {
 		this.A[b].add(a)
     }
 
+    retirerArete(a, b) {
+        this.A[a].delete(b)
+        this.A[b].delete(a)
+    }
+
     /**
      * @param {T} from
      * @return {T[]}

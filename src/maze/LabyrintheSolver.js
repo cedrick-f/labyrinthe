@@ -1,6 +1,6 @@
 import {Coords} from '../util/Coords.js'
 import {manhattanDistance} from '../util/Distance.js'
-import {MinHeap} from "./MinHeap";
+import {MinHeap} from "./MinHeap.js";
 
 /**
  * @param {('astar'|'breath-first-search')} name

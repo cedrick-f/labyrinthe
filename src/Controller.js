@@ -146,7 +146,7 @@ export class Controller {
    * @param {MouseEvent} event
    */
   onBuildInfoClick(event) {
-    openModal(`info_${this.buildAlgorithmSelect.value}.html`, document.querySelector('#modal-container'))
+    openModal(`info_${this.buildAlgorithmSelect.value.replace('-', '_')}.html`, document.querySelector('#modal-container'))
   }
 
   /**

@@ -76,7 +76,6 @@ input[name="info"] {
 
 dialog, [role=dialog] {
     position: relative;
-    bottom: 10vh;
     z-index: 10;
     background-color: #fafafa;
     border: 0;

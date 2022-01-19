@@ -217,46 +217,7 @@ class AldousGenerator extends MazeGenerator {
 }
 
 /**
- * 
- */
-class PrimGenerator extends MazeGenerator {
-
-	/**
-	 * @param {Labyrinthe} labyrinthe
-	 */
-	constructor(labyrinthe) {
-		super(labyrinthe)
-        this.cellules = labyrinthe.toutesCellulesLaterales() //toutes les cellules
-        const start = randomChoice(this.cellules)
-        this.murs = labyrinthe.mursCellule(start.x, start.y) //murs autours d'une cellule aléatoire
-	}
-
-	/**
-	 * @returns {VueParameters}
-	 */
-	next() {
-		let r = randomChoice(this.murs)
-		console.log(r)
-		if (this.cellules.some(cell => cell.equals(r[0])) 
-			|| this.cellules.some(cell => cell.equals(r[1]))) {
-			let m = 'kouwkouw'
-			console.log(m)
-		}
-
-		this.murs = []
-
-	}
-
-	/**
-	 * @return {boolean}
-	 */
-	hasNext() {
-		return this.murs.length !== 0
-	}
-}
-
-/**
- * 
+ * Un générateur par division récursive.
  */
 class RecursiveDivision extends MazeGenerator {
 
@@ -265,13 +226,51 @@ class RecursiveDivision extends MazeGenerator {
 		for (const mur of labyrinthe.tousLesMurs()) {
 			labyrinthe.ouvrir_passage(mur.a, mur.b)
 		}
-		
+		/** @type {{ width: number, height: number, cell: Coords }[]} */
+		this.stack = [{ cell: new Coords(0, 0), width: labyrinthe.width, height: labyrinthe.height }]
 	}
 
 	next() {
+		const { width, height, cell } = this.stack.pop()
 
+		if (width < height || (width === height && (Math.random() < 0.5))) {
+			// Construit un mur horizontalement et pour un y aléatoire, garder une ouverture
+			const y = cell.y + 1 + randomInt(height - 1);
+			const door = cell.x + randomInt(width);
+			for (let x = cell.x; x < (cell.x + width); x++) {
+				if (x !== door) {
+					this.labyrinthe.fermerPassage(new Coords(x, y - 1), new Coords(x, y));
+				}
+			}
+			this.prepare(new Coords(cell.x, y), width, height - y + cell.y);
+			this.prepare(cell, width, y - cell.y);
+		} else {
+			// Construit un mur verticalement et pour un x aléatoire, garder une ouverture
+			const x = cell.x + 1 + randomInt(width - 1);
+			const door = cell.y + randomInt(height);
+			for (let y = cell.y; y < (cell.y + height); y++) {
+				if (y !== door) {
+					this.labyrinthe.fermerPassage(new Coords(x - 1, y), new Coords(x, y));
+				}
+			}
+			this.prepare(new Coords(x, cell.y), width - x + cell.x, height);
+			this.prepare(cell, x - cell.x, height);
+		}
+		return {}
+	}
+
+	/**
+	 * @param {Coords} cell
+	 * @param {number} width
+	 * @param {number} height
+	 */
+	prepare(cell, width, height) {
+		if (width > 1 || height > 1) {
+			this.stack.push({ cell, width, height });
+		}
 	}
 
 	hasNext() {
+		return this.stack.length > 0
 	}
 }

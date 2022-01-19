@@ -1,9 +1,10 @@
 import {Graphe} from "./Graphe.js"
 import {Coords, Mur} from "../util/Coords.js";
+import {manhattanDistance} from "../util/Distance.js";
 
 export class Labyrinthe {
 	/**
-	 * @param {number} width 
+	 * @param {number} width
 	 * @param {number} height
 	 */
 	constructor(width, height) {
@@ -84,18 +85,35 @@ export class Labyrinthe {
 	 * @param {Coords} b
 	 */
 	ouvrir_passage(a, b) {
-		if (this.voisinsCellule(a.x, a.y).some(cellule => cellule.equals(b))) {
-			this.graphe.ajouter_arete(a.identifiant(this), b.identifiant(this))
-		} else {
+		this._verifierVoisins(a, b)
+		this.graphe.ajouter_arete(a.identifiant(this), b.identifiant(this))
+	}
+
+	/**
+	 * @param {Coords} a
+	 * @param {Coords} b
+	 */
+	fermerPassage(a, b) {
+		this._verifierVoisins(a, b)
+		this.graphe.retirerArete(a.identifiant(this), b.identifiant(this))
+	}
+
+	/**
+	 * @param {Coords} a
+	 * @param {Coords} b
+	 * @private
+	 */
+	_verifierVoisins(a, b) {
+		if (!a.inRange(this) || !b.inRange(this) || manhattanDistance(a, b) !== 1) {
 			throw new Error('Impossible d\'ouvrir un passage entre des cellules non voisines.')
 		}
 	}
-	
+
 	/**
 	 * Retourne true s'il y a pas d'arête au sens graphe entre deux cellules
 	 *
 	 * @param {number} ax
-	 * @param {number} ay 
+	 * @param {number} ay
 	 * @param {number} bx
 	 * @param {number} by
 	 * @return {boolean}

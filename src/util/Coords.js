@@ -18,6 +18,14 @@ export class Coords {
 
     /**
      * @param {Labyrinthe} labyrinthe
+     * @return {boolean}
+     */
+    inRange(labyrinthe) {
+        return this.x >= 0 && this.x < labyrinthe.width && this.y >= 0 && this.y < labyrinthe.height
+    }
+
+    /**
+     * @param {Labyrinthe} labyrinthe
      * @return {number}
      */
     identifiant(labyrinthe) {
