@@ -63,31 +63,37 @@ class AStarSolver extends MazeSolver {
 
     /**
      * @param {Labyrinthe} labyrinthe
-     * @param {function (Coords, Coords): number} [distance]
-     * @param {function (Coords, Coords): number} [costEstimate]
+     * @param {function (Coords, Coords): number} [costEstimate] Estime de la distance entre deux sommets (heuristique)
      */
-    constructor(labyrinthe, distance = manhattanDistance, costEstimate = manhattanDistance) {
+    constructor(labyrinthe, costEstimate = manhattanDistance) {
         super(labyrinthe)
 
         const cost = costEstimate(this.start, this.goal)
 
-        /** @type {MinHeap<number>} */
-        this.toSee = new MinHeap()
-        this.toSee.queue(this.startId, cost)
+        /**
+         * Les sommets connus et pas encore traités.
+         * Ils sont explorés par priorité croissante.
+         *
+         * @type {MinHeap<number>}
+         */
+        this.frontier = new MinHeap()
+        this.frontier.queue(this.startId, cost)
 
-        /** @type {Set<number>} */
-        this.closedSet = new Set()
-
-        /** @type {Object.<number, number>} */
+        /**
+         * Retient le prédécesseur de chaque sommet visité.
+         *
+         * @type {Object.<number, number>}
+         */
         this.cameFrom = {}
 
-        /** @type {Object.<number, number>} */
-        this.gScore = { [this.startId]: 0 }
+        /**
+         * Le coût du chemin testé jusqu'ici.
+         * On considère que s'il n'est pas référencé, sa valeur devrait être de +infini.
+         *
+         * @type {Object.<number, number>}
+         */
+        this.costSoFar = { [this.startId]: Number.MAX_SAFE_INTEGER }
 
-        /** @type {Object.<number, number>} */
-        this.fScore = { [this.startId]: cost }
-
-        this.distance = distance
         this.costEstimate = costEstimate
     }
 
@@ -95,8 +101,8 @@ class AStarSolver extends MazeSolver {
      * @return {VueParameters}
      */
     next() {
-        // Recherche du nœud avec le plus faible fScore
-        let current = this.toSee.poll();
+        // Récupère le sommet avec le plus faible coût jusqu'ici
+        let current = this.frontier.poll()
 
         // Chemin trouvé !
         if (current === this.goalId) {
@@ -104,36 +110,30 @@ class AStarSolver extends MazeSolver {
             return {}
         }
 
-        this.closedSet.add(current)
         const currentNode = Coords.fromIdentifiant(current, this.labyrinthe)
 
         for (const neighbor of this.labyrinthe.voisinsCellule(currentNode.x, currentNode.y)) {
             const neighborId = neighbor.identifiant(this.labyrinthe)
-            if (this.closedSet.has(neighborId)) {
-                continue
-            }
             if (this.labyrinthe.murEntre(currentNode.x, currentNode.y, neighbor.x, neighbor.y)) {
                 continue
             }
 
-            const tentativeGScore = this.gScore[current] + this.distance(currentNode, neighbor)
-            const score = tentativeGScore + this.costEstimate(neighbor, this.goal)
-            this.toSee.queue(neighborId, score)
-            if (tentativeGScore >= getScore(this.gScore, neighborId)) {
-                continue // Ce chemin est plus long.
+            // On estime que toutes les arêtes du graphe ont le même poids (1)
+            const newCost = this.costSoFar[current] + 1
+            if (!(neighborId in this.costSoFar) || newCost < this.costSoFar[neighborId]) {
+                // Ce chemin est plus court que celui connu jusqu'ici
+                this.costSoFar[neighborId] = newCost
+                const priority = newCost + this.costEstimate(neighbor, this.goal)
+                this.frontier.queue(neighborId, priority)
+                this.cameFrom[neighborId] = current
             }
-
-            // Ce chemin est le plus court parmi les précédents.
-            this.cameFrom[neighborId] = current
-            this.gScore[neighborId] = tentativeGScore
-            this.fScore[neighborId] = score
         }
 
         return { current: currentNode }
     }
 
     hasNext() {
-        return !this.toSee.empty() && this.path.length === 0
+        return !this.frontier.empty() && this.path.length === 0
     }
 }
 
